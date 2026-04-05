@@ -1428,55 +1428,115 @@ function printOrganograma(){
   });
   body += `</div>`;
 
-  // Grade de nós — estilo visual compacto
-  body += `<div style="padding:0 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">`;
+  // ── por área: agrupa pessoas por gestor ──
+  body += `<div style="padding:0 28px">`;
 
   areas.forEach(area => {
     const st = state.view === 'current' ? area.si : area.sf;
     const people = resolveEmployees(area);
 
-    // Descobrir gestores únicos
-    const gestores = [...new Set(
-      people.filter(p=>p.gestorNome).map(p=>p.gestorNome.trim())
-    )].filter(Boolean);
+    // Monta mapa gestorNome → [subordinados]
+    // Quem tem gestorNome que existe como nome na lista = subordinado
+    const nomeSet = new Set(people.map(p=>p.nome.trim().toLowerCase()));
 
-    body += `<div style="border:1.5px solid #cfd8e3;border-radius:12px;overflow:hidden;page-break-inside:avoid;background:#fff;box-shadow:0 2px 8px rgba(10,25,41,.08)">`;
+    // Identifica gestores reais: pessoas cujo nome aparece como gestorNome de alguém
+    const gestorNomeSet = new Set(
+      people.map(p=>safe(p.gestorNome).toLowerCase()).filter(Boolean)
+    );
 
-    // Barra colorida topo
+    // Separa gestores internos (estão na lista de pessoas da área)
+    const gestoresInternos = people.filter(p=>
+      gestorNomeSet.has(p.nome.trim().toLowerCase())
+    );
+
+    // Monta grupos: gestor → seus subordinados diretos
+    const grupos = [];
+    const alocados = new Set();
+
+    gestoresInternos.forEach(gestor=>{
+      const subs = people.filter(p=>
+        safe(p.gestorNome).toLowerCase() === gestor.nome.trim().toLowerCase() &&
+        p.matricula !== gestor.matricula
+      );
+      grupos.push({gestor, subs});
+      alocados.add(gestor.matricula||gestor.nome);
+      subs.forEach(s=>alocados.add(s.matricula||s.nome));
+    });
+
+    // Pessoas sem gestor interno (gestor externo à área ou sem gestor)
+    const semGrupo = people.filter(p=>!alocados.has(p.matricula||p.nome));
+
+    // Se não há hierarquia interna, trata o gestor externo como cabeçalho
+    if(!gestoresInternos.length && people.length){
+      const gestorExtNome = safe(people[0].gestorNome);
+      grupos.push({gestor:null, gestorExtNome, subs: people});
+    } else if(semGrupo.length){
+      grupos.push({gestor:null, gestorExtNome:'', subs: semGrupo});
+    }
+
+    // ── card da área ──
+    body += `<div style="border:1.5px solid #cfd8e3;border-radius:12px;overflow:hidden;page-break-inside:avoid;background:#fff;box-shadow:0 2px 8px rgba(10,25,41,.08);margin-bottom:18px">`;
     body += `<div style="height:5px;background:${ccbar[st]}"></div>`;
-
-    // Cabeçalho da área
-    body += `<div style="padding:10px 13px 8px">
-      <span style="display:inline-block;padding:1px 7px;border-radius:999px;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:${ccbg[st]};color:${cc[st]};margin-bottom:6px">${stLbl[st]}</span>
-      <div style="font-size:.88rem;font-weight:700;color:#0a1929;line-height:1.2;margin-bottom:2px">${esc(area.titulo)}</div>
-      ${gestores.length ? `<div style="font-size:.63rem;color:#607d8b;margin-top:3px">👤 Gestor: <strong style="color:#0a1929">${esc(gestores.join(' / '))}</strong></div>` : ''}
+    body += `<div style="padding:10px 14px 8px;border-bottom:1px solid #eef2f7;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="display:inline-block;padding:1px 7px;border-radius:999px;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:${ccbg[st]};color:${cc[st]};margin-bottom:5px">${stLbl[st]}</span>
+        <div style="font-size:.92rem;font-weight:700;color:#0a1929">${esc(area.titulo)}</div>
+      </div>
+      <div style="font-size:.68rem;color:#90a4ae;white-space:nowrap;margin-left:10px">${people.length} pessoa${people.length!==1?'s':''}</div>
     </div>`;
 
-    // Lista de colaboradores
-    if(people.length){
-      body += `<div style="border-top:1px solid #eef2f7;padding:8px 13px">
-        <div style="font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#00695c;margin-bottom:6px">${people.length} Colaborador${people.length!==1?'es':''}</div>`;
-      people.forEach(p=>{
-        const isGestor = gestores.some(g=>g.toLowerCase()===p.nome.trim().toLowerCase());
-        body+=`<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;padding-bottom:5px;border-bottom:1px solid #f0f4f8">
-          <div style="flex:1;min-width:0">
-            <div style="font-size:.73rem;font-weight:700;color:#0a1929;line-height:1.2">
-              ${esc(p.nome)}${isGestor?` <span style="font-size:.55rem;background:#e3f2fd;color:#1565c0;padding:1px 4px;border-radius:3px;font-weight:700;vertical-align:middle">GESTOR</span>`:''}
-            </div>
-            <div style="font-size:.63rem;color:#607d8b;line-height:1.3;margin-top:1px">${esc(p.cargo)}</div>
-            ${p.matricula ? `<div style="font-size:.58rem;color:#90a4ae;font-family:monospace;margin-top:1px">Mat. ${esc(p.matricula)}</div>` : ''}
-          </div>
-        </div>`;
-      });
-      body += `</div>`;
+    if(!people.length){
+      body += `<div style="padding:10px 14px;font-size:.72rem;color:#b0bec5;font-style:italic">Sem colaboradores mapeados</div>`;
     } else {
-      body += `<div style="border-top:1px solid #eef2f7;padding:8px 13px;font-size:.7rem;color:#b0bec5;font-style:italic">Sem colaboradores mapeados</div>`;
+      body += `<div style="padding:10px 14px">`;
+
+      grupos.forEach((grupo, gi)=>{
+        // Linha separadora entre grupos
+        if(gi > 0) body += `<div style="height:1px;background:#eef2f7;margin:10px 0"></div>`;
+
+        // Cabeçalho do gestor
+        if(grupo.gestor){
+          body += `<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;padding:7px 10px;background:#f0f4f8;border-radius:8px;border-left:3px solid #1565c0">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span style="font-size:.73rem;font-weight:700;color:#0a1929">${esc(grupo.gestor.nome)}</span>
+                <span style="font-size:.55rem;background:#e3f2fd;color:#1565c0;padding:1px 5px;border-radius:3px;font-weight:700">GESTOR</span>
+              </div>
+              <div style="font-size:.63rem;color:#607d8b;margin-top:2px">${esc(grupo.gestor.cargo)}</div>
+              ${grupo.gestor.matricula?`<div style="font-size:.58rem;color:#90a4ae;font-family:monospace;margin-top:1px">Mat. ${esc(grupo.gestor.matricula)}</div>`:''}
+            </div>
+          </div>`;
+        } else if(grupo.gestorExtNome){
+          body += `<div style="font-size:.63rem;color:#90a4ae;margin-bottom:6px;padding-left:4px">
+            👤 Gestor: <strong style="color:#607d8b">${esc(grupo.gestorExtNome)}</strong> <span style="opacity:.6">(externo à área)</span>
+          </div>`;
+        }
+
+        // Subordinados com recuo
+        if(grupo.subs.length){
+          body += `<div style="padding-left:${grupo.gestor?'18px':'0px'}">`;
+          grupo.subs.forEach((p,pi)=>{
+            const last = pi === grupo.subs.length - 1;
+            body += `<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:${last?'0':'5px'};padding-bottom:${last?'0':'5px'};${last?'':'border-bottom:1px solid #f4f6f9'}">
+              ${grupo.gestor ? `<div style="color:#cbd5e1;font-size:.7rem;padding-top:3px;flex-shrink:0">${last?'└':'├'}</div>` : ''}
+              <div style="flex:1;min-width:0">
+                <div style="font-size:.72rem;font-weight:600;color:#0a1929;line-height:1.25">${esc(p.nome)}</div>
+                <div style="font-size:.62rem;color:#607d8b;margin-top:1px">${esc(p.cargo)}</div>
+                ${p.matricula?`<div style="font-size:.57rem;color:#90a4ae;font-family:monospace;margin-top:1px">Mat. ${esc(p.matricula)}</div>`:''}
+              </div>
+            </div>`;
+          });
+          body += `</div>`;
+        }
+      });
+
+      body += `</div>`; // fim padding
     }
 
     body += `</div>`; // fim card área
   });
 
-  body += `</div>`; // fim grid
+  body += `</div>`; // fim container
 
   // Rodapé
   body += `<div style="margin-top:28px;background:#f8fbfd;border-top:1px solid #cfd8e3;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;font-size:.68rem;color:#607d8b">
