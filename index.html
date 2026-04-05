@@ -448,29 +448,8 @@ const SK = {
   CENTER:'rdc665_center_support'
 };
 
-const DEFAULT_POS = {
-  alta_adm:{x:520,y:10}, rd:{x:860,y:10},
-  qa:{x:320,y:330}, qc:{x:630,y:330}, reclamacoes:{x:940,y:330},
-  compras:{x:120,y:690}, producao:{x:430,y:690},
-  logistica:{x:740,y:690}, assistencia:{x:1050,y:690},
-  rh:{x:430,y:1050}, sst:{x:740,y:1050},
-
-ab_apoio:{x:120,y:1410},
-administrativo_apoio:{x:430,y:1410},
-atendimento_apoio:{x:740,y:1410},
-contabilidade_apoio:{x:1050,y:1410},
-expansao_apoio:{x:1360,y:1410},
-financas_apoio:{x:1670,y:1410},
-
-fiscal_apoio:{x:120,y:1730},
-gerencia_apoio:{x:430,y:1730},
-latam_apoio:{x:740,y:1730},
-marketing_apoio:{x:1050,y:1730},
-revenda_apoio:{x:1360,y:1730},
-ti_apoio:{x:1670,y:1730},
-lojas_apoio:{x:120,y:2010}
-
-};
+// Todas as coordenadas vêm exclusivamente da aba Node_Positions do Excel
+const DEFAULT_POS = {};
 
 // ═══════════════════════════════════════
 //  STATE
@@ -733,7 +712,7 @@ function stLabel(s){return s==='existing'?'Já existe':s==='strengthen'?'Fortale
 function buildNode(area){
   const st=getStatus(area);
   const people=resolveEmployees(area);
-  const pos=state.positions[area.id]||{x:100,y:100};
+  const pos=state.positions[area.id]||{x:20,y:20}; // sem posição no Excel → canto superior esquerdo
   const open=!!state.openPeople[area.id];
 
   const div=document.createElement('div');
