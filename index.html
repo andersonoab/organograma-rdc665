@@ -467,7 +467,8 @@ gerencia_apoio:{x:430,y:1730},
 latam_apoio:{x:740,y:1730},
 marketing_apoio:{x:1050,y:1730},
 revenda_apoio:{x:1360,y:1730},
-ti_apoio:{x:1670,y:1730}
+ti_apoio:{x:1670,y:1730},
+lojas_apoio:{x:120,y:2010}
 
 };
 
@@ -571,7 +572,8 @@ function parseWorkbook(file, bufOrText){
     if((first.match(/,/g)||[]).length>(first.match(/;/g)||[]).length) sep=',';
     wb=XLSX.read(text,{type:'string',FS:sep});
   }else{
-    wb=XLSX.read(bufOrText,{type:'array'});
+    // cellDates:true + cellNF:false ensures SheetJS uses cached formula results
+    wb=XLSX.read(bufOrText,{type:'array',cellDates:true,cellNF:false});
   }
 
   const out={employees:[],areaMap:[],nodePositions:{}};
@@ -598,10 +600,13 @@ function parseWorkbook(file, bufOrText){
   }
 
   if(posSheet){
-    XLSX.utils.sheet_to_json(wb.Sheets[posSheet],{defval:''}).forEach(r=>{
-      const id=safe(r['Node_ID']??r['node_id']??r['ID']??r['Id']??r['id']);
-      const x=Number(r['X']??r['x']??r['Pos_X']??r['pos_x']);
-      const y=Number(r['Y']??r['y']??r['Pos_Y']??r['pos_y']);
+    // Use raw:false so SheetJS returns cached formula values instead of formula strings
+    XLSX.utils.sheet_to_json(wb.Sheets[posSheet],{defval:'',raw:false}).forEach(r=>{
+      const id=safe(r['Node_ID']??r['Area_ID']??r['node_id']??r['area_id']??r['ID']??r['Id']??r['id']);
+      const xRaw=r['X']??r['x']??r['Pos_X']??r['pos_x']??'';
+      const yRaw=r['Y']??r['y']??r['Pos_Y']??r['pos_y']??'';
+      const x=Number(String(xRaw).replace(/[^\d.\-]/g,''));
+      const y=Number(String(yRaw).replace(/[^\d.\-]/g,''));
       if(id && Number.isFinite(x) && Number.isFinite(y)) out.nodePositions[id]={x,y};
     });
   }
@@ -1640,7 +1645,9 @@ function bindUI(){
         const parsed=parseWorkbook(f,f.name.toLowerCase().endsWith('.csv')?String(ev.target.result||''):new Uint8Array(ev.target.result));
         state.excel=parsed;
         if(parsed.nodePositions && Object.keys(parsed.nodePositions).length){
-          state.positions={...DEFAULT_POS,...state.positions,...parsed.nodePositions};
+          // Excel coordinates take full priority: start from DEFAULT_POS then override with Excel values
+          // (do NOT merge old state.positions which may have stale drag positions)
+          state.positions={...DEFAULT_POS,...parsed.nodePositions};
         }
         if(state.supportCentered) applySupportGridPositions(true);
         saveState();renderOrg();updateStatus('Excel importado: '+parsed.employees.length+' pessoas');
