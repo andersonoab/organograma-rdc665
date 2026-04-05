@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Organograma RDC 665 | Sonova</title>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1929; --blue:#0d3b6e; --mid:#1565c0; --cyan:#29b6f6; --gold:#f9a825;
+  --bg:#eef2f7; --border:#cfd8e3; --text:#0a1929; --muted:#607d8b;
+  --ok:#2e7d32; --okbg:#e8f5e9; --warn:#e65100; --warnbg:#fff3e0;
+  --new:#1565c0; --newbg:#e3f2fd; --trans:#00695c; --transbg:#e0f2f1;
+  --pulse:#f9a825; --radius:14px; --shadow:0 4px 20px rgba(10,25,41,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;color:var(--text);background:var(--bg)}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:300;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
+  border-bottom:1.5px solid var(--border);box-shadow:0 2px 10px rgba(10,25,41,.07);
+  padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+}
+.brand{font-weight:700;font-size:.92rem;color:var(--navy);letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--mid);font-weight:400}
+.group{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{
+  height:32px;border:1.5px solid var(--border);background:#fff;color:var(--navy);
+  border-radius:8px;padding:0 11px;cursor:pointer;font-size:.76rem;font-weight:600;
+  font-family:'IBM Plex Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;
+  white-space:nowrap;transition:.12s;
+}
+.btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:var(--blue)}
+.btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0}
+.file-input{display:none}
+.search-input{
+  height:32px;min-width:200px;padding:0 10px 0 28px;border-radius:8px;
+  border:1.5px solid var(--border);outline:none;font-size:.8rem;
+  font-family:'IBM Plex Sans',sans-serif;background:#fff;
+}
+.search-input:focus{border-color:var(--mid)}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:13px;height:13px;fill:var(--muted);pointer-events:none}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:6px;
+  background:#fff;border:1.5px solid var(--border);font-size:.72rem;color:var(--muted);font-weight:600;
+}
+.badge.hi{background:var(--gold);border-color:var(--gold);color:#000}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+  color:#fff;padding:20px 20px 16px;
+}
+.hero h1{margin:0 0 6px;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em}
+.hero p{margin:0;max-width:980px;color:rgba(255,255,255,.82);font-size:.83rem;line-height:1.5}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:0;padding:0 16px;background:var(--navy);border-bottom:2px solid rgba(255,255,255,.08)}
+.tab{
+  border:none;padding:10px 18px 9px;font-size:.76rem;font-weight:600;
+  background:transparent;color:rgba(255,255,255,.48);cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;letter-spacing:.04em;text-transform:uppercase;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:.12s;
+}
+.tab.active{color:#fff;border-bottom-color:var(--cyan)}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;padding:14px 16px;align-items:start}
+.layout.panel-collapsed{grid-template-columns:minmax(0,1fr)}
+@media(max-width:1100px){.layout,.layout.panel-collapsed{grid-template-columns:1fr}}
+
+/* ── MAIN PANEL ── */
+.main-panel{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.mode-bar{
+  padding:10px 14px;display:flex;gap:8px;align-items:center;
+  border-bottom:1.5px solid var(--border);background:#f8fbfd;flex-wrap:wrap;
+}
+.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%}
+.leg{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--muted);font-weight:500}
+.canvas-wrap{
+  position:relative;overflow:auto;min-height:calc(100vh - 240px);
+  background:
+    linear-gradient(rgba(10,25,41,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(10,25,41,.02) 1px,transparent 1px);
+  background-size:28px 28px;cursor:grab;
+}
+.canvas-wrap.grabbing{cursor:grabbing}
+.org-grid{position:relative;min-width:1700px;min-height:1100px}
+.line-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.connector{fill:none;stroke:#b0bec5;stroke-width:1.5;stroke-dasharray:6 4;opacity:.7}
+.connector.rh-line{stroke:var(--trans);stroke-dasharray:4 3;opacity:.5}
+
+/* ── NODE ── */
+.node{
+  position:absolute;width:260px;background:#fff;
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.node.hidden-mode{display:none}
+.node-bar{height:5px}
+.node.st-existing .node-bar{background:linear-gradient(90deg,#1b5e20,#43a047)}
+.node.st-strengthen .node-bar{background:linear-gradient(90deg,#bf360c,#ef6c00)}
+.node.st-new .node-bar{background:linear-gradient(90deg,#0d3b6e,#1e88e5)}
+.node.st-transversal .node-bar{background:linear-gradient(90deg,#004d40,#00897b)}
+
+.node-header{padding:9px 11px 7px}
+.drag-handle{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:grab;user-select:none}
+.drag-handle:active{cursor:grabbing}
+.handle-left{display:flex;flex-direction:column;gap:4px;min-width:0}
+.node-tag{display:inline-block;width:max-content;padding:2px 7px;border-radius:999px;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.st-existing .node-tag{background:var(--okbg);color:var(--ok)}
+.st-strengthen .node-tag{background:var(--warnbg);color:var(--warn)}
+.st-new .node-tag{background:var(--newbg);color:var(--new)}
+.st-transversal .node-tag{background:var(--transbg);color:var(--trans)}
+.node-title{font-size:.84rem;font-weight:700;line-height:1.25;color:var(--navy)}
+.node-detail{font-size:.68rem;color:var(--muted);line-height:1.35;margin-top:3px;margin-bottom:2px}
+.node.rh-glow{border-color:var(--trans)!important;box-shadow:0 0 0 2px rgba(0,105,92,.12),var(--shadow)!important}
+.drag-icon{color:var(--border);font-size:1rem}
+.drag-icon:hover{color:var(--muted)}
+
+.people-toggle{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 11px;background:var(--bg);border-top:1px solid var(--border);
+  cursor:pointer;font-size:.7rem;color:var(--muted);font-weight:600;
+}
+.people-toggle:hover{background:#e3f2fd;color:var(--mid)}
+.people-list{display:none;border-top:1px solid var(--border);max-height:180px;overflow:auto}
+.node.open .people-list{display:block}
+.person{padding:6px 10px;border-bottom:1px solid rgba(10,25,41,.04);background:#fff}
+.person:last-child{border-bottom:none}
+.person-name{font-size:.74rem;font-weight:600;color:var(--navy)}
+.person-role{font-size:.65rem;color:var(--muted);margin-top:1px;font-family:'IBM Plex Mono',monospace}
+.person-mat{font-size:.6rem;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.person.search-hit{background:#fffde7}
+
+/* pulse amarelo na busca */
+@keyframes nodePulse{
+  0%{box-shadow:0 0 0 0 rgba(249,168,37,.7),var(--shadow)}
+  60%{box-shadow:0 0 0 12px rgba(249,168,37,0),var(--shadow)}
+  100%{box-shadow:0 0 0 0 rgba(249,168,37,0),var(--shadow)}
+}
+.node.pulse{outline:2.5px solid var(--gold);animation:nodePulse 1.2s ease infinite}
+.node.pulse-current{outline:3px solid var(--gold);box-shadow:0 0 0 6px rgba(249,168,37,.18)!important}
+.unmapped-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;min-width:200px;max-width:280px;transition:.15s}
+.unmapped-card.pulse{outline:2.5px solid var(--gold);animation:nodePulse 1.2s ease infinite}
+.unmapped-card.pulse-current{outline:3px solid var(--gold);box-shadow:0 0 0 6px rgba(249,168,37,.18)!important}
+.unmapped-person.search-hit{background:#fffde7;border-radius:6px;padding:2px 4px;margin:0 -4px}
+
+/* ── SIDE PANEL ── */
+.side-panel{
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:16px;position:sticky;top:96px;
+  max-height:calc(100vh - 108px);overflow-y:auto;
+}
+.side-panel.collapsed{display:none}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:4px}
+.panel-head h3{margin:0;font-size:.95rem;font-weight:700;color:var(--navy)}
+.panel-toggle-float{
+  position:fixed;right:14px;top:132px;z-index:260;display:none;
+  box-shadow:var(--shadow)
+}
+.panel-toggle-float.visible{display:inline-flex}
+.side-panel h3{margin:0 0 4px;font-size:.95rem;font-weight:700;color:var(--navy)}
+.sub{font-size:.76rem;color:var(--muted);line-height:1.45;margin-bottom:10px}
+.section{border-top:1px solid var(--bg);padding-top:10px;margin-top:10px}
+.section h4{margin:0 0 7px;font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+.checklist{display:flex;flex-direction:column;gap:6px}
+.ck{display:flex;gap:7px;align-items:flex-start;font-size:.78rem;line-height:1.4;cursor:pointer}
+.ck input{margin-top:3px;accent-color:var(--ok)}
+.note{font-size:.74rem;color:var(--muted);line-height:1.4}
+.act-dot{width:4px;height:4px;border-radius:50%;background:var(--mid);flex-shrink:0;margin-top:6px}
+
+/* ── RH TAB VIEW ── */
+.rh-wrap{padding:16px}
+.rh-hero{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  color:#fff;border-radius:var(--radius);padding:18px 22px;margin-bottom:14px;
+  border:1px solid rgba(41,182,246,.12);
+}
+.rh-hero h2{margin:0 0 4px;font-size:1.1rem;font-weight:700}
+.rh-hero p{margin:0;font-size:.76rem;color:rgba(255,255,255,.75)}
+.rh-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.rh-grid{grid-template-columns:1fr}}
+.rh-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.rh-card-head{padding:12px 16px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between}
+.rh-card-head h3{font-size:.84rem;font-weight:600}
+.rh-card-body{padding:14px 16px}
+
+/* progress */
+.prog-wrap{background:var(--bg);border-radius:999px;height:5px;overflow:hidden;margin-bottom:10px}
+.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--ok),var(--cyan));transition:.4s}
+.prog-lbl{font-size:.68rem;color:var(--muted);margin-bottom:4px}
+
+/* checklist RH */
+.ck-grp{margin-bottom:10px}
+.ck-gt{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid var(--bg)}
+.ck-item{display:flex;gap:7px;padding:4px 0;border-bottom:1px solid var(--bg);align-items:flex-start;cursor:pointer}
+.ck-item:last-child{border-bottom:none}
+.ck-box{width:14px;height:14px;border:2px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:.12s}
+.ck-item.done .ck-box{background:var(--ok);border-color:var(--ok)}
+.ck-item.done .ck-box::after{content:'✓';color:#fff;font-size:9px;font-weight:700}
+.ck-txt{font-size:.73rem;color:var(--text);line-height:1.4}
+.ck-item.done .ck-txt{color:var(--muted);text-decoration:line-through}
+
+/* plan table */
+.plan-tbl{width:100%;border-collapse:collapse}
+.plan-tbl th{font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:5px 6px;border-bottom:2px solid var(--border);text-align:left}
+.plan-tbl td{font-size:.74rem;padding:7px 6px;border-bottom:1px solid var(--bg);vertical-align:top;line-height:1.45}
+.plan-tbl tr:last-child td{border-bottom:none}
+.plan-tbl tr:hover td{background:#f8fafc}
+.plan-pilar{font-weight:700;color:var(--navy);white-space:nowrap}
+.plan-ref{display:inline-block;font-size:.61rem;font-weight:600;padding:1px 5px;border-radius:3px;background:var(--newbg);color:var(--new);white-space:nowrap}
+
+/* plano editável */
+textarea.plan-edit{
+  width:100%;min-height:150px;border:1.5px solid var(--border);border-radius:8px;
+  padding:10px;resize:vertical;font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;
+  line-height:1.5;outline:none;background:#fafcff;color:var(--text);
+}
+textarea.plan-edit:focus{border-color:var(--mid);background:#fff;box-shadow:0 0 0 2px rgba(21,101,192,.1)}
+
+/* ── TOOLTIP ── */
+.tooltip{
+  position:fixed;z-index:600;background:var(--navy);color:#fff;
+  max-width:280px;border-radius:10px;padding:10px 13px;
+  box-shadow:0 12px 32px rgba(10,25,41,.28);pointer-events:none;
+  opacity:0;transition:opacity .12s;font-size:.76rem;line-height:1.5;
+}
+.tooltip.visible{opacity:1}
+.tooltip b{display:block;margin-bottom:3px;font-size:.78rem}
+
+/* ── TAB VIEWS ── */
+.tab-view{display:none}
+.tab-view.active{display:block}
+
+/* ── DROPDOWN MENU ── */
+.dropdown{position:relative;display:inline-flex}
+.dropdown-menu{
+  display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:500;
+  background:#fff;border:1.5px solid var(--border);border-radius:10px;
+  box-shadow:0 8px 24px rgba(10,25,41,.14);min-width:180px;padding:4px;
+}
+.dropdown.open .dropdown-menu{display:flex;flex-direction:column;gap:2px}
+.dropdown-menu .btn{width:100%;justify-content:flex-start;border:none;border-radius:6px;height:30px}
+.dropdown-menu .btn:hover{background:var(--bg);color:var(--navy);border:none}
+.dropdown-arrow{font-size:.55rem;opacity:.6;margin-left:2px}
+
+/* ── PRINT ── */
+@media print{
+  .topbar,.tabs,.tooltip,.no-print{display:none!important}
+  .hero{border-radius:0}
+  .layout{grid-template-columns:1fr;padding:0}
+  .side-panel{position:static;max-height:none;overflow:visible}
+  .canvas-wrap{min-height:auto;overflow:visible}
+  .org-grid{min-width:auto;min-height:auto}
+  .rh-grid{grid-template-columns:1fr}
+  .rh-card{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">Sonova <span>RDC 665</span></div>
+
+  <div class="group">
+    <label class="btn" for="txtInput">
+      <svg viewBox="0 0 20 20"><path d="M4 4h8l4 4v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+      Importar TXT
+    </label>
+    <input class="file-input" id="txtInput" type="file" accept=".txt">
+
+    <label class="btn" for="excelInput">
+      <svg viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h4l2 2h6a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"/></svg>
+      Importar Excel
+    </label>
+    <input class="file-input" id="excelInput" type="file" accept=".xlsx,.xls,.csv">
+
+    <label class="btn" for="jsonInput">
+      <svg viewBox="0 0 20 20"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"/></svg>
+      Importar JSON
+    </label>
+    <input class="file-input" id="jsonInput" type="file" accept=".json">
+  </div>
+
+  <div class="group">
+    <div class="dropdown" id="dropdownAcoes">
+      <button class="btn" id="btnDropdownAcoes">
+        <svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        Ações <span class="dropdown-arrow">▼</span>
+      </button>
+      <div class="dropdown-menu">
+        <button class="btn" id="btnExportJson">
+          <svg viewBox="0 0 20 20"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-9.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 7.293a1 1 0 01-1.414 0z"/></svg>
+          Exportar JSON
+        </button>
+        <button class="btn" id="btnExportExcel">
+          <svg viewBox="0 0 20 20"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-9.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 7.293a1 1 0 01-1.414 0z"/></svg>
+          Exportar Excel
+        </button>
+        <button class="btn" id="btnPrint">
+          <svg viewBox="0 0 20 20"><path d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h1v1a1 1 0 001 1h8a1 1 0 001-1v-1h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-3 8a1 1 0 110-2 1 1 0 010 2zm2 1v2h8v-2H6z"/></svg>
+          Imprimir
+        </button>
+        <button class="btn" id="btnPrintOrg" style="color:#00695c">
+          <svg viewBox="0 0 20 20"><path d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h1v1a1 1 0 001 1h8a1 1 0 001-1v-1h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-3 8a1 1 0 110-2 1 1 0 010 2zm2 1v2h8v-2H6z"/></svg>
+          Organograma ANVISA
+        </button>
+        <button class="btn" id="btnExpandAll">
+          <svg viewBox="0 0 20 20"><path d="M5 10h10M10 5v10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          Expandir tudo
+        </button>
+        <button class="btn" id="btnCollapseAll">
+          <svg viewBox="0 0 20 20"><path d="M5 10h10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          Colapsar tudo
+        </button>
+        <button class="btn" id="btnCenterOrg">
+          <svg viewBox="0 0 20 20"><path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          Centralizar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="search-wrap">
+      <svg viewBox="0 0 20 20"><path d="M12.9 14.32a8 8 0 111.41-1.41l4.38 4.37-1.41 1.42zm-4.9.68a6 6 0 100-12 6 6 0 000 12z"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Nome, cargo, área, RH…">
+    </div>
+    <button class="btn primary" id="btnNext">Próximo</button>
+    <button class="btn" id="btnClear">Limpar</button>
+    <button class="btn" id="btnResetStorage">Resetar storage</button>
+  </div>
+
+  <div class="group">
+    <span class="badge" id="statusBadge">Importe TXT e Excel</span>
+    <span class="badge" id="searchBadge" style="display:none"></span>
+  </div>
+</div>
+
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" data-tab="org">Organograma</button>
+  <button class="tab" data-tab="rh">Plano de Ação RH · RDC 665</button>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <div class="main-panel">
+
+    <!-- ORG VIEW -->
+    <div id="viewOrg" class="tab-view active">
+      <div class="mode-bar">
+        <button class="btn primary mode-btn" data-view="current">Importador</button>
+        <button class="btn mode-btn" data-view="target">Fabricante</button>
+        <span style="width:1px;height:20px;background:var(--border)"></span>
+        <span class="leg"><span class="legend-dot" style="background:#43a047"></span>Já existe</span>
+        <span class="leg"><span class="legend-dot" style="background:#ef6c00"></span>Fortalecer</span>
+        <span class="leg"><span class="legend-dot" style="background:#1e88e5"></span>Ajustar-Ajustar-Criar</span>
+        <span class="leg"><span class="legend-dot" style="background:#00897b"></span>Transversal</span>
+      </div>
+      <div class="canvas-wrap" id="canvasWrap">
+        <div class="org-grid" id="orgGrid">
+          <svg class="line-layer" id="lineLayer"></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- RH VIEW -->
+    <div id="viewRh" class="tab-view">
+      <div class="rh-wrap">
+        <div class="rh-hero">
+          <h2>🔬 Plano de Ação — Recursos Humanos · RDC 665/2022</h2>
+          <p>Checklist regulatório RH + 10 pilares de ação para migração Importador → Fabricante. Arts. 8º, 13–15, 34, 70–71, 77. Plano definido editável para auditoria ANVISA.</p>
+        </div>
+        <div class="rh-grid">
+          <!-- Checklist -->
+          <div class="rh-card">
+            <div class="rh-card-head">
+              <h3>Checklist Regulatório RH</h3>
+              <span style="font-size:.66rem;opacity:.7" id="ckPct">0%</span>
+            </div>
+            <div class="rh-card-body">
+              <div class="prog-lbl" id="ckLbl">Importe o TXT para carregar o checklist</div>
+              <div class="prog-wrap"><div class="prog-fill" id="ckBar" style="width:0%"></div></div>
+              <div id="rhChecklist"></div>
+            </div>
+          </div>
+          <!-- Plano definido + tabela -->
+          <div class="rh-card">
+            <div class="rh-card-head">
+              <h3>Plano Definido</h3>
+              <span style="font-size:.64rem;opacity:.65">✏ Editável</span>
+            </div>
+            <div class="rh-card-body">
+              <p class="sub">Texto livre para decisões, gaps e observações de auditoria.</p>
+              <textarea class="plan-edit" id="planText" placeholder="Digite o plano definido, gaps, observações de auditoria, decisões do RH…"></textarea>
+              <div class="section">
+                <h4>10 Pilares de Ação — RH</h4>
+                <table class="plan-tbl">
+                  <thead><tr><th>Pilar</th><th>Ação</th><th>Resp.</th><th>Art.</th></tr></thead>
+                  <tbody id="rhPlanTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-panel -->
+
+  <!-- SIDE PANEL -->
+  <aside class="side-panel" id="sidePanel">
+    <div class="panel-head">
+      <h3 id="panelTitle">Painel de ações</h3>
+      <button class="btn no-print" id="btnTogglePanel" type="button" title="Fechar painel">Fechar</button>
+    </div>
+    <div class="sub" id="panelSub">Importe TXT e Excel. Clique em uma área do organograma para ver ações e pessoas.</div>
+    <div id="panelBody">
+      <div class="note">Ações por área com prioridade de leitura para o que muda ao sair de importador para fabricante. RH recebe detalhamento regulatório ampliado.</div>
+    </div>
+  </aside>
+</div>
+<button class="btn panel-toggle-float no-print" id="btnOpenPanel" type="button" title="Abrir painel">Abrir painel</button>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip">
+  <b id="ttTitle"></b>
+  <div id="ttText"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  STORAGE KEYS
+// ═══════════════════════════════════════
+const SK = {
+  CFG:'rdc665_cfg', EX:'rdc665_ex', POS:'rdc665_pos',
+  CHK:'rdc665_chk', PLAN:'rdc665_plan', OPEN:'rdc665_open', PANEL:'rdc665_panel',
+  CENTER:'rdc665_center_support'
+};
+
+const DEFAULT_POS = {
+  alta_adm:{x:520,y:10}, rd:{x:860,y:10},
+  qa:{x:320,y:330}, qc:{x:630,y:330}, reclamacoes:{x:940,y:330},
+  compras:{x:120,y:690}, producao:{x:430,y:690},
+  logistica:{x:740,y:690}, assistencia:{x:1050,y:690},
+  rh:{x:430,y:1050}, sst:{x:740,y:1050},
+
+ab_apoio:{x:120,y:1410},
+administrativo_apoio:{x:430,y:1410},
+atendimento_apoio:{x:740,y:1410},
+contabilidade_apoio:{x:1050,y:1410},
+expansao_apoio:{x:1360,y:1410},
+financas_apoio:{x:1670,y:1410},
+
+fiscal_apoio:{x:120,y:1730},
+gerencia_apoio:{x:430,y:1730},
+latam_apoio:{x:740,y:1730},
+marketing_apoio:{x:1050,y:1730},
+revenda_apoio:{x:1360,y:1730},
+ti_apoio:{x:1670,y:1730}
+
+};
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+const state = {
+  view:'current',
+  config:null,
+  excel:{employees:[],areaMap:[],nodePositions:{}},
+  positions:{...DEFAULT_POS},
+  matches:[],matchIndex:-1,
+  openPeople:{},
+  checks:{},
+  planText:'',
+  panelOpen:true,
+  supportCentered:false
+};
+
+function saveState(){
+  try{
+    localStorage.setItem(SK.CFG, JSON.stringify(state.config));
+    localStorage.setItem(SK.EX,  JSON.stringify(state.excel));
+    localStorage.setItem(SK.POS, JSON.stringify(state.positions));
+    localStorage.setItem(SK.CHK, JSON.stringify(state.checks));
+    localStorage.setItem(SK.PLAN, state.planText||'');
+    localStorage.setItem(SK.OPEN,JSON.stringify(state.openPeople));
+    localStorage.setItem(SK.PANEL, JSON.stringify(state.panelOpen));
+    localStorage.setItem(SK.CENTER, JSON.stringify(state.supportCentered));
+  }catch(e){console.warn('saveState',e)}
+}
+
+function loadState(){
+  try{
+    const cfg  = JSON.parse(localStorage.getItem(SK.CFG)||'null');
+    const ex   = JSON.parse(localStorage.getItem(SK.EX)||'null');
+    const pos  = JSON.parse(localStorage.getItem(SK.POS)||'null');
+    const chk  = JSON.parse(localStorage.getItem(SK.CHK)||'{}');
+    const plan = localStorage.getItem(SK.PLAN)||'';
+    const open = JSON.parse(localStorage.getItem(SK.OPEN)||'{}');
+    const panel = JSON.parse(localStorage.getItem(SK.PANEL)||'true');
+    const center = JSON.parse(localStorage.getItem(SK.CENTER)||'false');
+    if(cfg)  state.config=cfg;
+    if(ex)   state.excel=ex;
+    if(pos)  state.positions={...DEFAULT_POS,...pos};
+    state.checks=chk;
+    state.planText=plan;
+    state.openPeople=open;
+    state.panelOpen=panel !== false;
+    state.supportCentered=center === true;
+  }catch(e){console.error('loadState',e)}
+}
+
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
+function safe(v){return String(v??'').trim()}
+function slug(v){return safe(v).toLowerCase()}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// ═══════════════════════════════════════
+//  PARSE TXT
+// ═══════════════════════════════════════
+function parseTxt(txt){
+  const cfg={areas:[],areaActions:{},rhChecklist:{},rhPlan:[]};
+  let section='';
+  String(txt).split(/\r?\n/).forEach(raw=>{
+    const line=raw.trim();
+    if(!line||line.startsWith('#')) return;
+    if(line.startsWith('[')&&line.endsWith(']')){section=line.slice(1,-1);return}
+    const p=raw.split('|').map(x=>safe(x));
+    if(section==='AREAS'&&p.length>=8){
+      cfg.areas.push({id:p[0],titulo:p[1],si:p[2],sf:p[3],areaMatch:p[4],hover:p[5],detail:p[6],ordem:Number(p[7]||999)});
+    }
+    if(section==='AREA_ACTIONS'&&p.length>=2){
+      if(!cfg.areaActions[p[0]]) cfg.areaActions[p[0]]=[];
+      cfg.areaActions[p[0]].push(p.slice(1).join('|'));
+    }
+    if(section==='RH_CHECKLIST'&&p.length>=2){
+      if(!cfg.rhChecklist[p[0]]) cfg.rhChecklist[p[0]]=[];
+      cfg.rhChecklist[p[0]].push(p.slice(1).join('|'));
+    }
+    if(section==='RH_ACTION_PLAN'&&p.length>=4){
+      cfg.rhPlan.push({pilar:p[0],acao:p[1],resp:p[2],ref:p[3]});
+    }
+  });
+  cfg.areas.sort((a,b)=>a.ordem-b.ordem);
+  return cfg;
+}
+
+// ═══════════════════════════════════════
+//  PARSE EXCEL — lógica exata da v5
+// ═══════════════════════════════════════
+function parseWorkbook(file, bufOrText){
+  const lower=file.name.toLowerCase();
+  let wb;
+  if(lower.endsWith('.csv')){
+    const text=String(bufOrText).replace(/^\uFEFF/,'');
+    let sep=';';
+    const first=(text.split(/\r?\n/).find(x=>x.trim())||'');
+    if((first.match(/,/g)||[]).length>(first.match(/;/g)||[]).length) sep=',';
+    wb=XLSX.read(text,{type:'string',FS:sep});
+  }else{
+    wb=XLSX.read(bufOrText,{type:'array'});
+  }
+
+  const out={employees:[],areaMap:[],nodePositions:{}};
+  const baseSheet=wb.SheetNames.find(n=>slug(n)==='base_funcionarios')||wb.SheetNames[0];
+  const mapSheet =wb.SheetNames.find(n=>slug(n)==='area_map'||slug(n)==='mapa_areas'||slug(n)==='area_mapa');
+  const posSheet =wb.SheetNames.find(n=>slug(n)==='node_positions'||slug(n)==='nodepositions'||slug(n)==='positions');
+
+  if(baseSheet){
+    out.employees=XLSX.utils.sheet_to_json(wb.Sheets[baseSheet],{defval:''}).map(r=>({
+      area:     safe(r['2-Diretoria']??r['Diretoria']??r['Area']??r['Área']??r['Departamento']??r['Node_ID_Area']??r['Node_ID_Sugerido']),
+      matricula:safe(r['9-Matricula']??r['Matrícula']??r['Matricula']),
+      nome:     safe(r['10-Nome']??r['Nome']??r['Colaborador']),
+      cargo:    safe(r['29-Título Cargo']??r['Título Cargo']??r['Titulo Cargo']??r['Cargo']??r['Função']??r['Titulo_Cargo']),
+      gestorMat:safe(r['38-Matrícula Gestor']??r['Matrícula Gestor']??r['Matricula Gestor']??r['Matricula_Gestor']),
+      gestorNome:safe(r['39-Gestor']??r['Gestor']??r['Nome_Gestor'])
+    })).filter(x=>x.nome||x.area||x.cargo);
+  }
+
+  if(mapSheet){
+    out.areaMap=XLSX.utils.sheet_to_json(wb.Sheets[mapSheet],{defval:''}).map(r=>({
+      area_base:safe(r['Area_Base']??r['Área_Base']??r['Area']??r['Área']),
+      area_txt: safe(r['Area_TXT']??r['Área_TXT']??r['TXT']??r['Match'])
+    })).filter(x=>x.area_base||x.area_txt);
+  }
+
+  if(posSheet){
+    XLSX.utils.sheet_to_json(wb.Sheets[posSheet],{defval:''}).forEach(r=>{
+      const id=safe(r['Node_ID']??r['node_id']??r['ID']??r['Id']??r['id']);
+      const x=Number(r['X']??r['x']??r['Pos_X']??r['pos_x']);
+      const y=Number(r['Y']??r['y']??r['Pos_Y']??r['pos_y']);
+      if(id && Number.isFinite(x) && Number.isFinite(y)) out.nodePositions[id]={x,y};
+    });
+  }
+
+  return out;
+}
+
+// ═══════════════════════════════════════
+//  RESOLUÇÃO DE PESSOAS POR ÁREA
+// ═══════════════════════════════════════
+function resolveEmployees(area){
+  const cfgMatch=slug(area.areaMatch);
+  return state.excel.employees.filter(emp=>{
+    const baseArea=slug(emp.area);
+    const mapped=state.excel.areaMap.find(m=>slug(m.area_base)===baseArea);
+    const matchText=mapped?slug(mapped.area_txt):baseArea;
+    return matchText.includes(cfgMatch)||baseArea.includes(cfgMatch);
+  });
+}
+
+
+
+function getSupportAreas(){
+  return (state.config?.areas || []).filter(a=>String(a.id||'').endsWith('_apoio'));
+}
+
+function applySupportGridPositions(force=false){
+  const supportAreas = getSupportAreas();
+  if(!supportAreas.length) return;
+
+  const cols = 6;
+  const startX = 320;
+  const startY = 1250;
+  const gapX = 290;
+  const gapY = 270;
+
+  supportAreas.forEach((area, idx) => {
+    const row = Math.floor(idx / cols);
+    const col = idx % cols;
+    const nextPos = {
+      x: startX + (col * gapX),
+      y: startY + (row * gapY)
+    };
+    const current = state.positions[area.id];
+    const invalid = !current || !Number.isFinite(Number(current.x)) || !Number.isFinite(Number(current.y));
+    if(force || invalid){
+      state.positions[area.id] = nextPos;
+    }
+  });
+}
+
+function ensureLayoutPositions(){
+  if(!state.config?.areas?.length) return;
+  if(state.supportCentered){
+    applySupportGridPositions(true);
+    return;
+  }
+  const supportAreas = getSupportAreas();
+  const supportStartX = 40;
+  const supportY = 1240;
+  const supportGapX = 280;
+  supportAreas.forEach((area,idx)=>{
+    const current = state.positions[area.id];
+    const invalid = !current || !Number.isFinite(Number(current.x)) || !Number.isFinite(Number(current.y));
+    if(invalid){
+      state.positions[area.id] = {x:supportStartX + (idx * supportGapX), y:supportY};
+    }
+  });
+}
+
+function centerViewportOnContent(){
+  const wrap = document.getElementById('canvasWrap');
+  const grid = document.getElementById('orgGrid');
+  if(!wrap || !grid) return;
+
+  const nodes = [...grid.querySelectorAll('.node:not(.hidden-mode)')];
+  if(!nodes.length) return;
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  nodes.forEach(node => {
+    const x = parseFloat(node.style.left) || 0;
+    const y = parseFloat(node.style.top) || 0;
+    const w = node.offsetWidth || 260;
+    const h = node.offsetHeight || 140;
+    minX = Math.min(minX, x);
+    minY = Math.min(minY, y);
+    maxX = Math.max(maxX, x + w);
+    maxY = Math.max(maxY, y + h);
+  });
+
+  const targetLeft = Math.max(0, ((minX + maxX) / 2) - (wrap.clientWidth / 2));
+  const targetTop = Math.max(0, ((minY + maxY) / 2) - (wrap.clientHeight / 2));
+
+  wrap.scrollTo({left:targetLeft, top:targetTop, behavior:'smooth'});
+}
+
+function centralizeOrganograma(){
+  centerViewportOnContent();
+  updateStatus('Visualização centralizada');
+}
+
+function updateGridSize(){
+  const grid=document.getElementById('orgGrid');
+  if(!grid) return;
+  const ids = state.config?.areas?.map(a=>a.id) || [];
+  const allPos = ids.map(id=>state.positions[id]).filter(Boolean);
+  if(!allPos.length) return;
+  const maxX = Math.max(...allPos.map(p=>Number(p.x)||0));
+  const maxY = Math.max(...allPos.map(p=>Number(p.y)||0));
+  grid.style.minWidth = Math.max(1700, maxX + 340) + 'px';
+  grid.style.minHeight = Math.max(1100, maxY + 260) + 'px';
+}
+
+// ═══════════════════════════════════════
+//  STATUS / LABELS
+// ═══════════════════════════════════════
+function getStatus(area){return state.view==='current'?area.si:area.sf}
+function stClass(s){return s==='existing'?'st-existing':s==='strengthen'?'st-strengthen':s==='new'?'st-new':'st-transversal'}
+function stLabel(s){return s==='existing'?'Já existe':s==='strengthen'?'Fortalecer':s==='new'?'Ajustar-Criar':'Transversal'}
+
+// ═══════════════════════════════════════
+//  BUILD NODE
+// ═══════════════════════════════════════
+function buildNode(area){
+  const st=getStatus(area);
+  const people=resolveEmployees(area);
+  const pos=state.positions[area.id]||{x:100,y:100};
+  const open=!!state.openPeople[area.id];
+
+  const div=document.createElement('div');
+  div.className=`node ${stClass(st)}${area.id==='rh'?' rh-glow':''}${state.view==='current'&&st==='new'?' hidden-mode':''}`;
+  div.style.left=pos.x+'px';
+  div.style.top=pos.y+'px';
+  div.dataset.id=area.id;
+  div.dataset.search=[area.titulo,area.hover,area.detail,...people.map(p=>`${p.nome} ${p.cargo}`)].join(' ').toLowerCase();
+  if(open) div.classList.add('open');
+
+  div.innerHTML=`
+    <div class="node-bar"></div>
+    <div class="node-header">
+      <div class="drag-handle" data-handle="${area.id}">
+        <div class="handle-left">
+          <span class="node-tag">${stLabel(st)}</span>
+          <div class="node-title">${esc(area.titulo)}</div>
+          <div class="node-detail">${esc(area.hover.length>72?area.hover.slice(0,72)+'…':area.hover)}</div>
+        </div>
+        <div class="drag-icon">⠿</div>
+      </div>
+    </div>
+    <div class="people-toggle" data-toggle="${area.id}">
+      <span>${people.length} pessoa${people.length!==1?'s':''}</span>
+      <span>${open?'▲ Ocultar':'▼ Ver pessoas'}</span>
+    </div>
+    <div class="people-list">
+      ${people.length?people.map(p=>`
+        <div class="person">
+          ${p.matricula?`<div class="person-mat">#${esc(p.matricula)}</div>`:''}
+          <div class="person-name">${esc(p.nome||'Sem nome')}</div>
+          <div class="person-role">${esc(p.cargo||'Sem cargo')}</div>
+          ${p.gestorNome&&p.gestorNome!=='001-MD'?`<div class="person-role" style="color:var(--trans)">↑ ${esc(p.gestorNome)}</div>`:''}
+        </div>`).join('')
+      :`<div class="person"><div class="person-name" style="color:var(--muted)">Sem pessoas importadas</div><div class="person-role">Área no TXT sem registros no Excel para ela.</div></div>`}
+    </div>`;
+
+  // Click no nó → painel (exceto toggle de pessoas)
+  div.addEventListener('click',e=>{
+    if(e.target.closest('.people-toggle')) return;
+    openPanel(area);
+  });
+  // Toggle pessoas
+  div.querySelector('.people-toggle').addEventListener('click',e=>{
+    e.stopPropagation();
+    state.openPeople[area.id]=!state.openPeople[area.id];
+    saveState(); renderOrg();
+  });
+  // Tooltip
+  div.addEventListener('mouseenter',e=>showTT(e,area));
+  div.addEventListener('mousemove',e=>moveTT(e));
+  div.addEventListener('mouseleave',hideTT);
+
+  // Drag — igual à v5
+  makeDraggable(div, div.querySelector('.drag-handle'), area.id);
+  return div;
+}
+
+// ═══════════════════════════════════════
+//  RENDER ORG
+// ═══════════════════════════════════════
+function renderOrg(){
+  const grid=document.getElementById('orgGrid');
+  const svg=document.getElementById('lineLayer');
+  grid.querySelectorAll('.node').forEach(n=>n.remove());
+  svg.innerHTML='';
+  if(!state.config){updateStatus('Importe o TXT');return}
+  ensureLayoutPositions();
+  updateGridSize();
+  state.config.areas.forEach(area=>grid.appendChild(buildNode(area)));
+  drawLines();
+  updateStatus();
+  renderUnmapped();
+}
+
+function renderUnmapped(){
+  // Identifica funcionários cujas áreas não batem com nenhuma área do TXT
+  const unmapped = [];
+  const unmappedAreas = {};
+  state.excel.employees.forEach(emp=>{
+    const baseArea = slug(emp.area);
+    if(!baseArea) return;
+    const matched = state.config.areas.some(area=>{
+      const cfgMatch = slug(area.areaMatch);
+      const mapped = state.excel.areaMap.find(m=>slug(m.area_base)===baseArea);
+      const matchText = mapped ? slug(mapped.area_txt) : baseArea;
+      return matchText.includes(cfgMatch) || baseArea.includes(cfgMatch);
+    });
+    if(!matched){
+      if(!unmappedAreas[emp.area]) unmappedAreas[emp.area]=[];
+      unmappedAreas[emp.area].push(emp);
+    }
+  });
+
+  // Remove bloco anterior se existir
+  const old = document.getElementById('unmappedSection');
+  if(old) old.remove();
+
+  const entries = Object.entries(unmappedAreas);
+  if(!entries.length) return;
+
+  const total = entries.reduce((s,[,v])=>s+v.length,0);
+  const wrap = document.createElement('div');
+  wrap.id = 'unmappedSection';
+  wrap.style.cssText = 'padding:14px 16px;border-top:2px dashed var(--border);margin-top:8px;background:#fafcff';
+
+  let html = `<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px">
+    ⚠ ${total} colaborador${total!==1?'es':''} em ${entries.length} área${entries.length!==1?'s':''} não mapeada${entries.length!==1?'s':''} para RDC 665
+    <span style="font-size:.66rem;font-weight:400;color:var(--muted)"> — Adicione mapeamento no Excel (aba Area_Map) ou ajuste o TXT</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px">`;
+
+  entries.forEach(([areaName, emps])=>{
+    const searchBlob = [areaName, ...emps.map(p=>`${p.nome||''} ${p.cargo||''} ${p.matricula||''}`)].join(' ').toLowerCase();
+    html+=`<div class="unmapped-card" data-unmapped-card="${esc(areaName)}" data-search="${esc(searchBlob)}">
+      <div style="font-size:.7rem;font-weight:700;color:var(--navy);margin-bottom:6px;border-bottom:1px solid var(--bg);padding-bottom:4px">${esc(areaName)} <span style="color:var(--muted);font-weight:400">(${emps.length})</span></div>
+      ${emps.map(p=>`<div class="unmapped-person" style="font-size:.68rem;color:var(--text);margin-bottom:3px"><strong>${esc(p.nome||'')}</strong>${p.matricula?` <span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.62rem">#${esc(p.matricula)}</span>`:''}<br><span style="color:var(--muted);font-family:'IBM Plex Mono',monospace">${esc(p.cargo||'')}</span></div>`).join('')}
+    </div>`;
+  });
+  html += `</div>`;
+  wrap.innerHTML = html;
+
+  // Insere após o layout principal
+  const layout = document.querySelector('.layout');
+  if(layout) layout.after(wrap);
+
+  wrap.querySelectorAll('.unmapped-card').forEach(card=>{
+    card.addEventListener('click',()=>openUnmappedPanel(card.dataset.unmappedCard||'', unmappedAreas[card.dataset.unmappedCard]||[]));
+  });
+}
+
+// ═══════════════════════════════════════
+//  SVG LINES
+// ═══════════════════════════════════════
+function drawLines(){
+  const svg=document.getElementById('lineLayer');
+  svg.innerHTML='';
+  const byId={};
+  document.querySelectorAll('.node:not(.hidden-mode)').forEach(n=>{byId[n.dataset.id]=n});
+
+  const edges=[
+    ['alta_adm','rd'],
+    ['rd','qa'],['rd','qc'],['rd','reclamacoes'],
+    ['rd','compras'],['rd','producao'],['rd','logistica'],['rd','assistencia'],
+  ];
+  const rhEdges=[['rd','rh'],['rd','sst']];
+
+  const drawEdge=(a,b,cls)=>{
+    const na=byId[a],nb=byId[b];
+    if(!na||!nb) return;
+    const ax=parseFloat(na.style.left)+130, ay=parseFloat(na.style.top)+na.offsetHeight;
+    const bx=parseFloat(nb.style.left)+130, by=parseFloat(nb.style.top);
+    const midY=(ay+by)/2;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('class','connector'+(cls?' '+cls:''));
+    p.setAttribute('d',`M ${ax} ${ay} L ${ax} ${midY} L ${bx} ${midY} L ${bx} ${by}`);
+    svg.appendChild(p);
+  };
+  edges.forEach(([a,b])=>drawEdge(a,b,''));
+  rhEdges.forEach(([a,b])=>drawEdge(a,b,'rh-line'));
+}
+
+// ═══════════════════════════════════════
+//  PAINEL LATERAL
+// ═══════════════════════════════════════
+function setPanelOpen(open){
+  state.panelOpen=!!open;
+  const layout=document.querySelector('.layout');
+  const side=document.getElementById('sidePanel');
+  const btnOpen=document.getElementById('btnOpenPanel');
+  const btnToggle=document.getElementById('btnTogglePanel');
+  if(layout) layout.classList.toggle('panel-collapsed', !state.panelOpen);
+  if(side) side.classList.toggle('collapsed', !state.panelOpen);
+  if(btnOpen) btnOpen.classList.toggle('visible', !state.panelOpen);
+  if(btnToggle) btnToggle.textContent=state.panelOpen?'Fechar':'Abrir';
+  saveState();
+}
+
+function openPanel(area){
+  if(!state.panelOpen) setPanelOpen(true);
+  const acts=state.config?.areaActions[area.id]||[];
+  const people=resolveEmployees(area);
+  const st=getStatus(area);
+  const cc={existing:'var(--ok)',strengthen:'var(--warn)',new:'var(--new)',transversal:'var(--trans)'};
+
+  document.getElementById('panelTitle').textContent=area.titulo;
+  document.getElementById('panelSub').textContent=area.hover || area.detail || 'Área selecionada do organograma';
+
+  // Formata o detail em parágrafos numerados para leitura executiva
+  const detailLines = (area.detail||area.hover||'').split(';').map(s=>s.trim()).filter(Boolean);
+  const detailHtml = detailLines.length > 1
+    ? detailLines.map(s=>`<div style="display:flex;gap:6px;margin-bottom:5px"><span style="color:var(--mid);font-weight:700;flex-shrink:0">›</span><span>${esc(s)}</span></div>`).join('')
+    : `<p style="font-size:.78rem;color:var(--text);line-height:1.55">${esc(area.detail||area.hover||'')}</p>`;
+
+  let body=`
+    <div style="margin-bottom:10px"><span style="display:inline-block;padding:2px 8px;border-radius:5px;font-size:.67rem;font-weight:700;background:${cc[st]}22;color:${cc[st]}">${stLabel(st)}</span></div>
+    <div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:.75rem;color:var(--text);line-height:1.5">${detailHtml}</div>`;
+
+  body+=`<div class="section"><h4>Ações regulatórias · RDC 665</h4><div class="checklist">`;
+  if(acts.length){
+    body+=acts.map((a,i)=>`<label class="ck"><input type="checkbox" ${state.checks['act_'+area.id+'_'+i]?'checked':''} data-check="act_${area.id}_${i}"><span>${esc(a)}</span></label>`).join('');
+  }else{
+    body+=`<div class="note">Sem ações cadastradas no TXT para esta área.</div>`;
+  }
+  body+=`</div></div>`;
+
+  body+=`<div class="section"><h4>Pessoas (${people.length})</h4>`;
+  if(people.length){
+    body+=`<div class="checklist">`+people.map(p=>`<div class="note"><strong>${esc(p.nome)}</strong>${p.matricula?` <span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.65rem">#${esc(p.matricula)}</span>`:''}<br>${esc(p.cargo||'')}</div>`).join('')+`</div>`;
+  }else{
+    body+=`<div class="note">Sem pessoas mapeadas pelo Excel atual.</div>`;
+  }
+  body+=`</div>`;
+
+  // Anotações por área — persistidas em storage
+  const noteKey = 'note_' + area.id;
+  const noteVal = state.checks[noteKey] || '';
+  body += `<div class="section"><h4>📝 Anotações / Evidências para auditoria</h4>
+    <textarea class="plan-edit" style="min-height:80px;font-size:.74rem" id="noteArea" placeholder="Registre evidências, responsáveis, datas, pendências para auditoria ANVISA…">${esc(noteVal)}</textarea>
+    <div style="font-size:.64rem;color:var(--ok);margin-top:3px;opacity:0;transition:opacity .3s" id="noteSaved">✓ Salvo</div>
+  </div>`;
+
+  // Checklist RH extra no painel quando área = rh
+  if(area.id==='rh'&&state.config?.rhChecklist){
+    body+=`<div class="section"><h4>Checklist RH completo</h4>`;
+    Object.entries(state.config.rhChecklist).forEach(([cat,items])=>{
+      body+=`<div class="note" style="font-weight:700;color:var(--navy);margin:6px 0 3px">${esc(cat)}</div>`;
+      items.forEach((item,idx)=>{
+        const key=`rh_${cat}_${idx}`;
+        body+=`<label class="ck"><input type="checkbox" ${state.checks[key]?'checked':''} data-check="${key}"><span>${esc(item)}</span></label>`;
+      });
+    });
+    body+=`</div>`;
+  }
+
+  document.getElementById('panelBody').innerHTML=body;
+  bindChecks(document.getElementById('panelBody'));
+
+  // Bind notes textarea auto-save
+  const ta = document.getElementById('noteArea');
+  if(ta){
+    ta.addEventListener('input', () => {
+      state.checks['note_'+area.id] = ta.value;
+      saveState();
+      const ns = document.getElementById('noteSaved');
+      if(ns){ns.style.opacity='1';clearTimeout(ta._t);ta._t=setTimeout(()=>ns.style.opacity='0',1800)}
+    });
+  }
+
+  // Highlight node
+  document.querySelectorAll('.node').forEach(n=>n.style.outline='');
+  document.querySelector(`.node[data-id="${area.id}"]`)?.style.setProperty('outline','2px solid var(--mid)');
+}
+
+function bindChecks(scope){
+  scope.querySelectorAll('input[data-check]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      state.checks[inp.dataset.check]=inp.checked;
+      saveState();
+    });
+  });
+}
+
+
+function openUnmappedPanel(areaName, people){
+  if(!state.panelOpen) setPanelOpen(true);
+  document.getElementById('panelTitle').textContent='Fora da RDC / Não mapeado';
+  document.getElementById('panelSub').textContent=areaName ? `Área encontrada no Excel sem vínculo atual no TXT: ${areaName}` : 'Área do Excel sem vínculo atual no TXT';
+
+  let body=`
+    <div style="margin-bottom:10px"><span style="display:inline-block;padding:2px 8px;border-radius:5px;font-size:.67rem;font-weight:700;background:var(--warnbg);color:var(--warn)">Mapeamento pendente</span></div>
+    <div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:.75rem;color:var(--text);line-height:1.5">
+      <div style="display:flex;gap:6px;margin-bottom:5px"><span style="color:var(--mid);font-weight:700;flex-shrink:0">›</span><span>Esses colaboradores existem no Excel, mas ainda não foram vinculados a nenhuma área do TXT da RDC 665.</span></div>
+      <div style="display:flex;gap:6px;margin-bottom:5px"><span style="color:var(--mid);font-weight:700;flex-shrink:0">›</span><span>Você pode corrigir isso pelo mapeamento na aba Area_Map ou ajustando o campo de correspondência da área no TXT.</span></div>
+      <div style="display:flex;gap:6px"><span style="color:var(--mid);font-weight:700;flex-shrink:0">›</span><span>A busca agora também considera esses colaboradores fora da RDC.</span></div>
+    </div>`;
+
+  body+=`<div class="section"><h4>Pessoas (${people.length})</h4>`;
+  if(people.length){
+    body+=`<div class="checklist">`+people.map(p=>`<div class="note"><strong>${esc(p.nome||'')}</strong>${p.matricula?` <span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.65rem">#${esc(p.matricula)}</span>`:''}<br>${esc(p.cargo||'')}<br><span style="color:var(--muted)">${esc(p.area||'')}</span></div>`).join('')+`</div>`;
+  }else{
+    body+=`<div class="note">Nenhum colaborador encontrado.</div>`;
+  }
+  body+=`</div>`;
+
+  document.getElementById('panelBody').innerHTML=body;
+  document.querySelectorAll('.node').forEach(n=>n.style.outline='');
+}
+
+// ═══════════════════════════════════════
+//  RH TAB
+// ═══════════════════════════════════════
+function renderRhTab(){
+  const wrap=document.getElementById('rhChecklist');
+  const planTbl=document.getElementById('rhPlanTable');
+
+  if(!state.config){
+    wrap.innerHTML=`<div class="note">Importe o TXT para carregar o checklist RH.</div>`;
+    planTbl.innerHTML='';
+    updateCkProg();
+    return;
+  }
+
+  // Checklist com progress
+  let html='';
+  Object.entries(state.config.rhChecklist||{}).forEach(([cat,items])=>{
+    html+=`<div class="ck-grp"><div class="ck-gt">${esc(cat)}</div>`;
+    items.forEach((item,idx)=>{
+      const key=`rh_${cat}_${idx}`;
+      html+=`<div class="ck-item${state.checks[key]?' done':''}" data-k="${key}"><div class="ck-box"></div><div class="ck-txt">${esc(item)}</div></div>`;
+    });
+    html+=`</div>`;
+  });
+  wrap.innerHTML=html;
+
+  wrap.querySelectorAll('.ck-item').forEach(ci=>{
+    ci.addEventListener('click',()=>{
+      ci.classList.toggle('done');
+      state.checks[ci.dataset.k]=ci.classList.contains('done');
+      updateCkProg();
+      saveState();
+    });
+  });
+  updateCkProg();
+
+  // Plano de ação
+  planTbl.innerHTML=(state.config.rhPlan||[]).map(r=>`
+    <tr>
+      <td><span class="plan-pilar">${esc(r.pilar)}</span></td>
+      <td>${esc(r.acao)}</td>
+      <td style="white-space:nowrap;color:var(--muted);font-size:.69rem">${esc(r.resp)}</td>
+      <td><span class="plan-ref">${esc(r.ref)}</span></td>
+    </tr>`).join('');
+
+  document.getElementById('planText').value=state.planText||'';
+}
+
+function updateCkProg(){
+  const all=document.querySelectorAll('.ck-item').length;
+  const done=document.querySelectorAll('.ck-item.done').length;
+  const pct=all?Math.round(done/all*100):0;
+  document.getElementById('ckBar').style.width=pct+'%';
+  document.getElementById('ckLbl').textContent=`${done} de ${all} itens concluídos`;
+  document.getElementById('ckPct').textContent=pct+'%';
+}
+
+// ═══════════════════════════════════════
+//  TOOLTIP
+// ═══════════════════════════════════════
+function showTT(e,area){
+  document.getElementById('ttTitle').textContent=area.titulo;
+  document.getElementById('ttText').textContent=area.hover||area.detail||'';
+  moveTT(e);
+  document.getElementById('tooltip').classList.add('visible');
+}
+function moveTT(e){
+  const tt=document.getElementById('tooltip');
+  tt.style.left=Math.min(e.clientX+14,window.innerWidth-290)+'px';
+  tt.style.top=(e.clientY+10)+'px';
+}
+function hideTT(){document.getElementById('tooltip').classList.remove('visible')}
+
+// ═══════════════════════════════════════
+//  STATUS BADGE
+// ═══════════════════════════════════════
+function updateStatus(msg){
+  const b=document.getElementById('statusBadge');
+  if(msg){b.textContent=msg;return}
+  const cfg=state.config?state.config.areas.length+' áreas':'sem TXT';
+  b.textContent=`${cfg} | ${state.excel.employees.length} pessoas`;
+}
+
+// ═══════════════════════════════════════
+//  BUSCA + PULSO AMARELO
+// ═══════════════════════════════════════
+function doSearch(){
+  const term=slug(document.getElementById('searchInput').value);
+  state.matches=[];state.matchIndex=-1;
+
+  document.querySelectorAll('.node').forEach(n=>{
+    n.classList.remove('pulse','pulse-current');
+    n.querySelectorAll('.person').forEach(p=>p.classList.remove('search-hit'));
+    if(term&&n.dataset.search?.includes(term)){
+      n.classList.add('pulse');
+      n.querySelectorAll('.person').forEach(p=>{if(slug(p.innerText).includes(term)) p.classList.add('search-hit')});
+      state.matches.push({type:'node',el:n});
+    }
+  });
+
+  document.querySelectorAll('.unmapped-card').forEach(card=>{
+    card.classList.remove('pulse','pulse-current');
+    card.querySelectorAll('.unmapped-person').forEach(p=>p.classList.remove('search-hit'));
+    if(term&&slug(card.dataset.search||'').includes(term)){
+      card.classList.add('pulse');
+      card.querySelectorAll('.unmapped-person').forEach(p=>{if(slug(p.innerText).includes(term)) p.classList.add('search-hit')});
+      state.matches.push({type:'unmapped',el:card});
+    }
+  });
+
+  updateSrchBadge();
+  if(state.matches.length) nextSearch(true);
+}
+function nextSearch(reset=false){
+  if(!state.matches.length){doSearch();return}
+  state.matchIndex=reset?0:(state.matchIndex+1)%state.matches.length;
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('pulse-current'));
+  document.querySelectorAll('.unmapped-card').forEach(c=>c.classList.remove('pulse-current'));
+
+  const match=state.matches[state.matchIndex];
+  const target=match.el;
+  target.classList.add('pulse-current');
+
+  if(match.type==='node'){
+    if(!target.classList.contains('open')){
+      target.classList.add('open');
+      state.openPeople[target.dataset.id]=true;
+      saveState();
+    }
+
+    target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+
+    setTimeout(()=>{
+      const firstHit = target.querySelector('.person.search-hit');
+      if(firstHit){
+        firstHit.style.transition='background .3s';
+        firstHit.style.background='#fff9c4';
+        firstHit.scrollIntoView({behavior:'smooth',block:'nearest'});
+        setTimeout(()=>firstHit.style.background='',1800);
+      }
+    }, 400);
+
+    const area=state.config?.areas.find(a=>a.id===target.dataset.id);
+    if(area) openPanel(area);
+  }else if(match.type==='unmapped'){
+    target.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>{
+      const firstHit = target.querySelector('.unmapped-person.search-hit');
+      if(firstHit){
+        firstHit.scrollIntoView({behavior:'smooth',block:'nearest'});
+      }
+    }, 300);
+    openUnmappedPanel(target.dataset.unmappedCard||'', (state.excel.employees||[]).filter(emp=>safe(emp.area)===safe(target.dataset.unmappedCard||'')));
+  }
+
+  updateSrchBadge();
+}
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  state.matches=[];state.matchIndex=-1;
+  document.querySelectorAll('.node').forEach(n=>{
+    n.classList.remove('pulse','pulse-current');
+    n.querySelectorAll('.person').forEach(p=>p.classList.remove('search-hit'));
+  });
+  document.querySelectorAll('.unmapped-card').forEach(card=>{
+    card.classList.remove('pulse','pulse-current');
+    card.querySelectorAll('.unmapped-person').forEach(p=>p.classList.remove('search-hit'));
+  });
+  updateSrchBadge();
+}
+function updateSrchBadge(){
+  const b=document.getElementById('searchBadge');
+  if(!state.matches.length){b.style.display='none';return}
+  b.style.display='inline-flex';
+  b.className=state.matches.length?'badge hi':'badge';
+  b.textContent=`${Math.max(state.matchIndex+1,1)}/${state.matches.length}`;
+}
+
+// ═══════════════════════════════════════
+//  COLAPSAR TUDO
+// ═══════════════════════════════════════
+function collapseAll(){
+  state.openPeople={};
+  saveState();
+  renderOrg();
+}
+
+function expandAll(){
+  if(!state.config) return;
+  const areas=state.config.areas||[];
+  areas.forEach(a=>{ state.openPeople[a.id]=true; });
+  saveState();
+  renderOrg();
+}
+
+function resetStorage(){
+  const ok=window.confirm('Deseja realmente resetar o storage local deste projeto? Isso limpará TXT, Excel, posições, checklist, plano e expansões salvas.');
+  if(!ok) return;
+  Object.values(SK).forEach(k=>localStorage.removeItem(k));
+  state.view='current';
+  state.config=null;
+  state.excel={employees:[],areaMap:[],nodePositions:{}};
+  state.positions={...DEFAULT_POS};
+  state.matches=[];
+  state.matchIndex=-1;
+  state.openPeople={};
+  state.checks={};
+  state.planText='';
+  state.panelOpen=true;
+  state.supportCentered=false;
+  document.getElementById('planText').value='';
+  document.getElementById('panelTitle').textContent='Painel de ações';
+  document.getElementById('panelSub').textContent='Importe TXT e Excel. Clique em uma área do organograma para ver ações e pessoas.';
+  document.getElementById('panelBody').innerHTML='<div class="note">Ações por área com prioridade de leitura para o que muda ao sair de importador para fabricante. RH recebe detalhamento regulatório ampliado.</div>';
+  clearSearch();
+  setPanelOpen(state.panelOpen);
+  renderOrg();
+  renderRhTab();
+  updateStatus('Storage resetado');
+}
+
+// ═══════════════════════════════════════
+//  IMPRIMIR PARA AUDITORIA
+// ═══════════════════════════════════════
+function printAuditoria(){
+  const w = window.open('','_blank','width=900,height=700');
+  const cc = {existing:'#2e7d32',strengthen:'#e65100',new:'#1565c0',transversal:'#00695c'};
+  const ccbg = {existing:'#e8f5e9',strengthen:'#fff3e0',new:'#e3f2fd',transversal:'#e0f2f1'};
+  const mode = state.view === 'current' ? 'Importador' : 'Fabricante';
+  const date = new Date().toLocaleDateString('pt-BR');
+  const emp = state.excel.employees.length;
+
+  let body = '';
+
+  // Header
+  body += `<div style="background:#0a1929;color:#fff;padding:24px 32px;margin-bottom:24px">
+    <div style="font-size:.8rem;opacity:.6;margin-bottom:4px">Sonova · CONFIDENCIAL · USO INTERNO</div>
+    <h1 style="margin:0 0 6px;font-size:1.6rem;font-weight:700">Organograma RDC 665/2022</h1>
+    <div style="font-size:.85rem;opacity:.8">Visão: ${mode} · Gerado em ${date} · ${(state.config?.areas.length||0)} áreas · ${emp} colaboradores</div>
+  </div>`;
+
+  if(!state.config){body+='<p style="padding:32px">Importe o TXT para gerar o relatório.</p>';w.document.write('<html><body>'+body+'</body></html>');w.print();return}
+
+  // Sumário de status
+  const areas = state.config.areas;
+  const bySt = {existing:0,strengthen:0,new:0,transversal:0};
+  areas.forEach(a=>{const st=state.view==='current'?a.si:a.sf; bySt[st]=(bySt[st]||0)+1});
+  const stLbl = {existing:'Já existe',strengthen:'Fortalecer',new:'Ajustar-Criar',transversal:'Transversal'};
+  body += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 32px;margin-bottom:28px">`;
+  ['existing','strengthen','new','transversal'].forEach(s=>{
+    body+=`<div style="background:${ccbg[s]};border:1px solid ${cc[s]}40;border-radius:8px;padding:12px 14px">
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:${cc[s]};margin-bottom:4px">${stLbl[s]}</div>
+      <div style="font-size:1.8rem;font-weight:700;color:${cc[s]}">${bySt[s]||0}</div>
+      <div style="font-size:.7rem;color:#607d8b">área${bySt[s]!==1?'s':''}</div>
+    </div>`;
+  });
+  body += `</div>`;
+
+  // Tabela de áreas com ações e pessoas
+  body += `<div style="padding:0 32px">`;
+  body += `<h2 style="font-size:1rem;font-weight:700;color:#0a1929;border-bottom:2px solid #0a1929;padding-bottom:8px;margin-bottom:16px">Áreas · Ações Regulatórias · Pessoas</h2>`;
+
+  areas.forEach(area => {
+    const st = state.view==='current' ? area.si : area.sf;
+    const acts = state.config.areaActions[area.id] || [];
+    const people = resolveEmployees(area);
+    const note = state.checks['note_'+area.id] || '';
+
+    body += `<div style="border:1px solid #cfd8e3;border-radius:10px;overflow:hidden;margin-bottom:16px;page-break-inside:avoid">`;
+    // Cabeçalho área
+    body += `<div style="background:#f8fbfd;padding:10px 14px;border-bottom:1px solid #cfd8e3;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="display:inline-block;padding:1px 7px;border-radius:999px;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:${ccbg[st]};color:${cc[st]};margin-right:8px">${stLbl[st]}</span>
+        <strong style="font-size:.9rem;color:#0a1929">${esc(area.titulo)}</strong>
+      </div>
+      <span style="font-size:.72rem;color:#607d8b">${people.length} pessoa${people.length!==1?'s':''}</span>
+    </div>`;
+    // Detail
+    body += `<div style="padding:8px 14px 6px;font-size:.74rem;color:#607d8b;line-height:1.45;border-bottom:1px solid #eef2f7">${esc(area.detail||area.hover)}</div>`;
+    // Grid: ações | pessoas
+    body += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">`;
+    // Ações
+    body += `<div style="padding:10px 14px;border-right:1px solid #eef2f7">
+      <div style="font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#1565c0;margin-bottom:6px">Ações RDC 665</div>`;
+    if(acts.length){
+      acts.forEach((a,i)=>{
+        const checked = state.checks['act_'+area.id+'_'+i];
+        body+=`<div style="font-size:.72rem;color:#0a1929;line-height:1.4;margin-bottom:4px;display:flex;gap:6px;align-items:flex-start">
+          <span style="display:inline-block;width:12px;height:12px;border:1.5px solid #cfd8e3;border-radius:2px;flex-shrink:0;margin-top:1px;background:${checked?'#2e7d32':'#fff'}">${checked?'<span style="color:#fff;font-size:8px;line-height:12px;display:block;text-align:center">✓</span>':''}</span>
+          <span>${esc(a)}</span></div>`;
+      });
+    }else{body+=`<div style="font-size:.72rem;color:#b0bec5">Sem ações cadastradas.</div>`}
+    body += `</div>`;
+    // Pessoas
+    body += `<div style="padding:10px 14px">
+      <div style="font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#00695c;margin-bottom:6px">Colaboradores</div>`;
+    if(people.length){
+      people.forEach(p=>{
+        body+=`<div style="font-size:.71rem;color:#0a1929;margin-bottom:3px"><strong>${esc(p.nome)}</strong>${p.matricula?' <span style="color:#90a4ae;font-size:.64rem">#'+esc(p.matricula)+'</span>':''}<br><span style="color:#607d8b">${esc(p.cargo)}</span></div>`;
+      });
+    }else{body+=`<div style="font-size:.72rem;color:#b0bec5">Sem pessoas mapeadas.</div>`}
+    body+=`</div></div>`;
+    // Anotações
+    if(note){
+      body+=`<div style="padding:8px 14px;border-top:1px solid #eef2f7;background:#fffde7">
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#f9a825;margin-bottom:3px">📝 Anotações / Evidências</div>
+        <div style="font-size:.73rem;color:#0a1929;white-space:pre-wrap;line-height:1.5">${esc(note)}</div>
+      </div>`;
+    }
+    body += `</div>`;
+  });
+  body += `</div>`;
+
+  // Checklist RH
+  if(state.config.rhChecklist && Object.keys(state.config.rhChecklist).length){
+    body += `<div style="padding:28px 32px 0"><h2 style="font-size:1rem;font-weight:700;color:#0a1929;border-bottom:2px solid #0a1929;padding-bottom:8px;margin-bottom:16px">Checklist Regulatório RH · RDC 665/2022</h2>`;
+    const all = [], done = [];
+    Object.entries(state.config.rhChecklist).forEach(([cat,items])=>{
+      body+=`<div style="margin-bottom:14px;page-break-inside:avoid">
+        <div style="font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#607d8b;margin-bottom:6px;border-bottom:1px solid #eef2f7;padding-bottom:3px">${esc(cat)}</div>`;
+      items.forEach((item,idx)=>{
+        const k=`rh_${cat}_${idx}`;
+        const checked=!!state.checks[k];
+        if(checked) done.push(1); else all.push(1);
+        body+=`<div style="font-size:.73rem;color:#0a1929;margin-bottom:4px;display:flex;gap:8px;align-items:flex-start">
+          <span style="display:inline-block;width:12px;height:12px;border:1.5px solid #cfd8e3;border-radius:2px;flex-shrink:0;margin-top:2px;background:${checked?'#2e7d32':'#fff'}">${checked?'<span style="color:#fff;font-size:8px;line-height:12px;display:block;text-align:center">✓</span>':''}</span>
+          <span>${esc(item)}</span></div>`;
+      });
+      body+=`</div>`;
+    });
+    const total=done.length+all.length;
+    const pct=total?Math.round(done.length/total*100):0;
+    body+=`<div style="background:#e8f5e9;border-radius:8px;padding:10px 14px;margin-bottom:20px;display:flex;gap:16px;align-items:center">
+      <span style="font-size:1.4rem;font-weight:700;color:#2e7d32">${pct}%</span>
+      <span style="font-size:.78rem;color:#2e7d32">${done.length} de ${total} itens concluídos</span>
+    </div></div>`;
+  }
+
+  // Plano de ação RH
+  if(state.config.rhPlan?.length){
+    body+=`<div style="padding:0 32px 28px"><h2 style="font-size:1rem;font-weight:700;color:#0a1929;border-bottom:2px solid #0a1929;padding-bottom:8px;margin-bottom:16px">10 Pilares de Ação — RH</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:.75rem">
+        <thead><tr style="background:#f8fbfd">
+          <th style="padding:7px 10px;border:1px solid #cfd8e3;text-align:left;font-weight:700;color:#0a1929">Pilar</th>
+          <th style="padding:7px 10px;border:1px solid #cfd8e3;text-align:left;font-weight:700;color:#0a1929">Ação</th>
+          <th style="padding:7px 10px;border:1px solid #cfd8e3;text-align:left;font-weight:700;color:#0a1929">Responsável</th>
+          <th style="padding:7px 10px;border:1px solid #cfd8e3;text-align:left;font-weight:700;color:#0a1929">Artigo</th>
+        </tr></thead><tbody>`;
+    state.config.rhPlan.forEach(r=>{
+      body+=`<tr><td style="padding:7px 10px;border:1px solid #cfd8e3;font-weight:700;color:#0a1929;white-space:nowrap">${esc(r.pilar)}</td>
+        <td style="padding:7px 10px;border:1px solid #cfd8e3;color:#0a1929">${esc(r.acao)}</td>
+        <td style="padding:7px 10px;border:1px solid #cfd8e3;color:#607d8b;white-space:nowrap">${esc(r.resp)}</td>
+        <td style="padding:7px 10px;border:1px solid #cfd8e3"><span style="background:#e3f2fd;color:#1565c0;font-size:.65rem;font-weight:700;padding:2px 5px;border-radius:3px">${esc(r.ref)}</span></td></tr>`;
+    });
+    body+=`</tbody></table></div>`;
+  }
+
+  // Plano definido (texto livre)
+  if(state.planText){
+    body+=`<div style="padding:0 32px 28px;page-break-inside:avoid">
+      <h2 style="font-size:1rem;font-weight:700;color:#0a1929;border-bottom:2px solid #0a1929;padding-bottom:8px;margin-bottom:12px">Plano Definido</h2>
+      <div style="background:#fafcff;border:1px solid #cfd8e3;border-radius:8px;padding:14px;font-size:.78rem;white-space:pre-wrap;line-height:1.6;color:#0a1929">${esc(state.planText)}</div>
+    </div>`;
+  }
+
+  // Rodapé
+  body+=`<div style="background:#f8fbfd;border-top:1px solid #cfd8e3;padding:16px 32px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:.7rem;color:#607d8b">
+    <span>Sonova · Organograma RDC 665/2022 · ${mode}</span>
+    <span>Gerado em ${date} · Documento confidencial</span>
+  </div>`;
+
+  const full = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Organograma RDC 665 | Sonova | ${date}</title>
+    <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#0a1929}@page{size:A4;margin:0}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>
+  </head><body>${body}</body></html>`;
+
+  w.document.write(full);
+  w.document.close();
+  setTimeout(()=>w.print(), 600);
+}
+
+// ═══════════════════════════════════════
+//  IMPRIMIR ORGANOGRAMA (ANVISA — só nomes)
+// ═══════════════════════════════════════
+function printOrganograma(){
+  const w = window.open('','_blank','width=1000,height=750');
+  const cc = {existing:'#2e7d32',strengthen:'#e65100',new:'#1565c0',transversal:'#00695c'};
+  const ccbg = {existing:'#e8f5e9',strengthen:'#fff3e0',new:'#e3f2fd',transversal:'#e0f2f1'};
+  const ccbar = {existing:'linear-gradient(90deg,#1b5e20,#43a047)',strengthen:'linear-gradient(90deg,#bf360c,#ef6c00)',new:'linear-gradient(90deg,#0d3b6e,#1e88e5)',transversal:'linear-gradient(90deg,#004d40,#00897b)'};
+  const stLbl = {existing:'Já existe',strengthen:'Fortalecer',new:'Ajustar-Criar',transversal:'Transversal'};
+  const mode = state.view === 'current' ? 'Importador' : 'Fabricante';
+  const date = new Date().toLocaleDateString('pt-BR');
+
+  let body = '';
+
+  // Header
+  body += `<div style="background:#0a1929;color:#fff;padding:20px 28px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:.7rem;opacity:.55;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Sonova · RDC 665/2022 · Documento para Auditoria ANVISA</div>
+      <h1 style="margin:0 0 4px;font-size:1.4rem;font-weight:700">Organograma de Pessoal</h1>
+      <div style="font-size:.78rem;opacity:.75">Visão: ${mode} &nbsp;·&nbsp; Gerado em ${date} &nbsp;·&nbsp; ${(state.config?.areas.length||0)} áreas &nbsp;·&nbsp; ${state.excel.employees.length} colaboradores</div>
+    </div>
+    <div style="text-align:right;font-size:.68rem;opacity:.55;line-height:1.6">
+      <div>Confidencial · Uso interno</div>
+      <div>ANVISA · Vigilância Sanitária</div>
+    </div>
+  </div>`;
+
+  if(!state.config){
+    body+='<p style="padding:32px;font-family:Arial,sans-serif">Importe o TXT para gerar o organograma.</p>';
+    w.document.write('<!DOCTYPE html><html><body>'+body+'</body></html>');
+    w.document.close();w.print();return;
+  }
+
+  const areas = state.config.areas;
+
+  // Legenda
+  body += `<div style="display:flex;gap:14px;padding:0 28px;margin-bottom:18px;flex-wrap:wrap">`;
+  ['existing','strengthen','new','transversal'].forEach(s=>{
+    body+=`<div style="display:flex;align-items:center;gap:5px;font-size:.68rem;color:#0a1929">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${cc[s]}"></span>
+      <span style="font-weight:600;color:${cc[s]}">${stLbl[s]}</span>
+    </div>`;
+  });
+  body += `</div>`;
+
+  // Grade de nós — estilo visual compacto
+  body += `<div style="padding:0 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">`;
+
+  areas.forEach(area => {
+    const st = state.view === 'current' ? area.si : area.sf;
+    const people = resolveEmployees(area);
+
+    // Descobrir gestores únicos
+    const gestores = [...new Set(
+      people.filter(p=>p.gestorNome).map(p=>p.gestorNome.trim())
+    )].filter(Boolean);
+
+    body += `<div style="border:1.5px solid #cfd8e3;border-radius:12px;overflow:hidden;page-break-inside:avoid;background:#fff;box-shadow:0 2px 8px rgba(10,25,41,.08)">`;
+
+    // Barra colorida topo
+    body += `<div style="height:5px;background:${ccbar[st]}"></div>`;
+
+    // Cabeçalho da área
+    body += `<div style="padding:10px 13px 8px">
+      <span style="display:inline-block;padding:1px 7px;border-radius:999px;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:${ccbg[st]};color:${cc[st]};margin-bottom:6px">${stLbl[st]}</span>
+      <div style="font-size:.88rem;font-weight:700;color:#0a1929;line-height:1.2;margin-bottom:2px">${esc(area.titulo)}</div>
+      ${gestores.length ? `<div style="font-size:.63rem;color:#607d8b;margin-top:3px">👤 Gestor: <strong style="color:#0a1929">${esc(gestores.join(' / '))}</strong></div>` : ''}
+    </div>`;
+
+    // Lista de colaboradores
+    if(people.length){
+      body += `<div style="border-top:1px solid #eef2f7;padding:8px 13px">
+        <div style="font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#00695c;margin-bottom:6px">${people.length} Colaborador${people.length!==1?'es':''}</div>`;
+      people.forEach(p=>{
+        const isGestor = gestores.some(g=>g.toLowerCase()===p.nome.trim().toLowerCase());
+        body+=`<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;padding-bottom:5px;border-bottom:1px solid #f0f4f8">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.73rem;font-weight:700;color:#0a1929;line-height:1.2">
+              ${esc(p.nome)}${isGestor?` <span style="font-size:.55rem;background:#e3f2fd;color:#1565c0;padding:1px 4px;border-radius:3px;font-weight:700;vertical-align:middle">GESTOR</span>`:''}
+            </div>
+            <div style="font-size:.63rem;color:#607d8b;line-height:1.3;margin-top:1px">${esc(p.cargo)}</div>
+            ${p.matricula ? `<div style="font-size:.58rem;color:#90a4ae;font-family:monospace;margin-top:1px">Mat. ${esc(p.matricula)}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      body += `</div>`;
+    } else {
+      body += `<div style="border-top:1px solid #eef2f7;padding:8px 13px;font-size:.7rem;color:#b0bec5;font-style:italic">Sem colaboradores mapeados</div>`;
+    }
+
+    body += `</div>`; // fim card área
+  });
+
+  body += `</div>`; // fim grid
+
+  // Rodapé
+  body += `<div style="margin-top:28px;background:#f8fbfd;border-top:1px solid #cfd8e3;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;font-size:.68rem;color:#607d8b">
+    <span>Sonova · Organograma RDC 665/2022 · Visão: ${mode}</span>
+    <span>Gerado em ${date} · Confidencial · Uso exclusivo para Auditoria ANVISA</span>
+  </div>`;
+
+  const full = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Organograma Pessoal | Sonova | ${date}</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#0a1929}
+      @page{size:A4;margin:12mm}
+      @media print{
+        body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+        div[style*="grid"]{display:grid!important}
+      }
+    </style>
+  </head><body>${body}</body></html>`;
+
+  w.document.write(full);
+  w.document.close();
+  setTimeout(()=>w.print(), 700);
+}
+
+// ═══════════════════════════════════════
+//  EXPORT JSON
+// ═══════════════════════════════════════
+function exportJSON(){
+  dlBlob(new Blob([JSON.stringify({
+    config:state.config,excel:state.excel,positions:state.positions,
+    checks:state.checks,planText:state.planText,openPeople:state.openPeople,
+    supportCentered:state.supportCentered
+  },null,2)],{type:'application/json'}),'organograma_rdc665_export.json');
+}
+
+// ═══════════════════════════════════════
+//  EXPORT EXCEL
+// ═══════════════════════════════════════
+function exportExcel(){
+  const wb=XLSX.utils.book_new();
+  const baseRows=state.excel.employees.map(e=>({'2-Diretoria':e.area,'9-Matricula':e.matricula,'10-Nome':e.nome,'29-Título Cargo':e.cargo,'38-Matrícula Gestor':e.gestorMat,'39-Gestor':e.gestorNome}));
+  const mapRows=state.excel.areaMap.map(m=>({Area_Base:m.area_base,Area_TXT:m.area_txt}));
+  const posRows=Object.entries(state.positions).map(([id,p])=>({Area_ID:id,X:p.x,Y:p.y}));
+  const chkRows=Object.entries(state.checks).map(([k,v])=>({Chave:k,Marcado:v?'SIM':'NAO'}));
+  const planRows=[{Plano_Definido:state.planText||''}];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(baseRows),'Base_Funcionarios');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(mapRows),'Area_Map');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(posRows),'Node_Positions');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(chkRows),'Checklist_Status');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(planRows),'Plano_Editavel');
+  XLSX.writeFile(wb,'organograma_rdc665_export.xlsx');
+}
+
+function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+
+// ═══════════════════════════════════════
+//  IMPORT JSON
+// ═══════════════════════════════════════
+function importJSON(file){
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(String(e.target.result||'{}'));
+      if(d.config) state.config=d.config;
+      if(d.excel)  state.excel=d.excel;
+      if(d.positions) state.positions={...DEFAULT_POS,...d.positions};
+      if(d.checks) state.checks=d.checks;
+      if(d.planText!==undefined) state.planText=d.planText;
+      if(d.openPeople) state.openPeople=d.openPeople;
+      if(d.supportCentered !== undefined) state.supportCentered = d.supportCentered === true;
+      if(state.supportCentered) applySupportGridPositions(true);
+      saveState();renderOrg();renderRhTab();updateStatus('JSON importado');
+    }catch(err){alert('JSON inválido.');console.error(err)}
+  };
+  r.readAsText(file,'utf-8');
+}
+
+// ═══════════════════════════════════════
+//  DRAG NÓS — pointer events (v5)
+// ═══════════════════════════════════════
+function makeDraggable(node,handle,id){
+  let sx=0,sy=0,ox=0,oy=0,dragging=false;
+  handle.addEventListener('pointerdown',e=>{
+    e.stopPropagation();
+    dragging=true;
+    sx=e.clientX;sy=e.clientY;
+    ox=parseFloat(node.style.left);oy=parseFloat(node.style.top);
+    handle.setPointerCapture(e.pointerId);
+  });
+  handle.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    node.style.left=(ox+e.clientX-sx)+'px';
+    node.style.top=(oy+e.clientY-sy)+'px';
+    state.positions[id]={x:ox+e.clientX-sx,y:oy+e.clientY-sy};
+    drawLines();
+  });
+  handle.addEventListener('pointerup',()=>{
+    if(!dragging) return;
+    dragging=false;
+    saveState();
+  });
+}
+
+// ═══════════════════════════════════════
+//  PAN CANVAS — scroll (v5)
+// ═══════════════════════════════════════
+function enableCanvasPan(){
+  const wrap=document.getElementById('canvasWrap');
+  let down=false,sx=0,sy=0,sl=0,st2=0;
+  wrap.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.drag-handle')||e.target.closest('.node')) return;
+    down=true;wrap.classList.add('grabbing');
+    sx=e.clientX;sy=e.clientY;sl=wrap.scrollLeft;st2=wrap.scrollTop;
+  });
+  window.addEventListener('pointermove',e=>{
+    if(!down) return;
+    wrap.scrollLeft=sl-(e.clientX-sx);
+    wrap.scrollTop=st2-(e.clientY-sy);
+  });
+  window.addEventListener('pointerup',()=>{down=false;wrap.classList.remove('grabbing')});
+}
+
+// ═══════════════════════════════════════
+//  BIND UI
+// ═══════════════════════════════════════
+function bindUI(){
+  // TXT
+  document.getElementById('txtInput').addEventListener('change',e=>{
+    const f=e.target.files[0];if(!f) return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      state.config=parseTxt(String(ev.target.result||''));
+      saveState();renderOrg();renderRhTab();updateStatus('TXT importado');
+    };
+    r.readAsText(f,'utf-8');
+  });
+
+  // Excel
+  document.getElementById('excelInput').addEventListener('change',e=>{
+    const f=e.target.files[0];if(!f) return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{
+        const parsed=parseWorkbook(f,f.name.toLowerCase().endsWith('.csv')?String(ev.target.result||''):new Uint8Array(ev.target.result));
+        state.excel=parsed;
+        if(parsed.nodePositions && Object.keys(parsed.nodePositions).length){
+          state.positions={...DEFAULT_POS,...state.positions,...parsed.nodePositions};
+        }
+        if(state.supportCentered) applySupportGridPositions(true);
+        saveState();renderOrg();updateStatus('Excel importado: '+parsed.employees.length+' pessoas');
+      }catch(err){alert('Erro ao importar Excel/CSV: '+err.message);console.error(err)}
+    };
+    if(f.name.toLowerCase().endsWith('.csv')) r.readAsText(f,'utf-8');
+    else r.readAsArrayBuffer(f);
+  });
+
+  // JSON
+  document.getElementById('jsonInput').addEventListener('change',e=>{
+    const f=e.target.files[0];if(f) importJSON(f);
+  });
+
+  // Botões
+  document.getElementById('btnExportJson').addEventListener('click',exportJSON);
+  document.getElementById('btnExportExcel').addEventListener('click',exportExcel);
+  document.getElementById('btnPrint').addEventListener('click', printAuditoria);
+  document.getElementById('btnPrintOrg').addEventListener('click', printOrganograma);
+  document.getElementById('btnCollapseAll').addEventListener('click',collapseAll);
+  document.getElementById('btnExpandAll').addEventListener('click',expandAll);
+
+  // Dropdown Ações
+  const dropEl=document.getElementById('dropdownAcoes');
+  document.getElementById('btnDropdownAcoes').addEventListener('click',e=>{
+    e.stopPropagation();
+    dropEl.classList.toggle('open');
+  });
+  document.addEventListener('click',()=>dropEl.classList.remove('open'));
+  document.getElementById('btnCenterOrg').addEventListener('click',centralizeOrganograma);
+  document.getElementById('btnTogglePanel').addEventListener('click',()=>setPanelOpen(false));
+  document.getElementById('btnOpenPanel').addEventListener('click',()=>setPanelOpen(true));
+  document.getElementById('btnResetStorage').addEventListener('click',resetStorage);
+
+  // Busca
+  document.getElementById('searchInput').addEventListener('input',doSearch);
+  document.getElementById('btnNext').addEventListener('click',()=>nextSearch(false));
+  document.getElementById('btnClear').addEventListener('click',clearSearch);
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      const tab=btn.dataset.tab;
+      document.getElementById('viewOrg').classList.toggle('active',tab==='org');
+      document.getElementById('viewRh').classList.toggle('active',tab==='rh');
+    });
+  });
+
+  // Modo
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.mode-btn').forEach(x=>{x.classList.remove('primary');x.classList.add('btn')});
+      btn.classList.add('primary');
+      state.view=btn.dataset.view;
+      renderOrg();
+    });
+  });
+
+  // Plano editável
+  document.getElementById('planText').addEventListener('input',e=>{
+    state.planText=e.target.value;
+    saveState();
+  });
+
+  enableCanvasPan();
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+loadState();
+bindUI();
+renderOrg();
+renderRhTab();
+updateStatus();
+</script>
+</body>
+</html>

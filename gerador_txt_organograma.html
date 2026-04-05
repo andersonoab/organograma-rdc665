@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gerador de TXT — Organograma RDC 665</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1929;--blue:#0d3b6e;--mid:#1565c0;--cyan:#29b6f6;--gold:#f9a825;
+  --bg:#eef2f7;--border:#cfd8e3;--text:#0a1929;--muted:#607d8b;
+  --ok:#2e7d32;--okbg:#e8f5e9;--warn:#e65100;--warnbg:#fff3e0;
+  --new:#1565c0;--newbg:#e3f2fd;--trans:#00695c;--transbg:#e0f2f1;
+  --radius:12px;--shadow:0 4px 20px rgba(10,25,41,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;color:var(--text);background:var(--bg)}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:300;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
+  border-bottom:1.5px solid var(--border);box-shadow:0 2px 10px rgba(10,25,41,.07);
+  padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+}
+.brand{font-weight:700;font-size:.92rem;color:var(--navy);white-space:nowrap}
+.brand span{color:var(--mid);font-weight:400}
+.btn{
+  height:32px;border:1.5px solid var(--border);background:#fff;color:var(--navy);
+  border-radius:8px;padding:0 12px;cursor:pointer;font-size:.76rem;font-weight:600;
+  font-family:'IBM Plex Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;
+  white-space:nowrap;transition:.12s;
+}
+.btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:var(--blue)}
+.btn.success{background:var(--ok);color:#fff;border-color:var(--ok);font-size:.82rem;height:36px;padding:0 16px}
+.btn.success:hover{background:#1b5e20}
+.btn.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
+.btn.warn:hover{background:#bf360c}
+.btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0}
+
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+  color:#fff;padding:20px 20px 16px;
+}
+.hero h1{margin:0 0 6px;font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;letter-spacing:-.02em}
+.hero p{margin:0;color:rgba(255,255,255,.82);font-size:.83rem;line-height:1.5;max-width:900px}
+
+/* TABS */
+.tabs{display:flex;gap:0;padding:0 16px;background:var(--navy);border-bottom:2px solid rgba(255,255,255,.08)}
+.tab{
+  border:none;padding:10px 18px 9px;font-size:.76rem;font-weight:600;
+  background:transparent;color:rgba(255,255,255,.48);cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;letter-spacing:.04em;text-transform:uppercase;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:.12s;
+}
+.tab.active{color:#fff;border-bottom-color:var(--cyan)}
+.tab-count{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:999px;font-size:.6rem;
+  background:rgba(255,255,255,.15);margin-left:5px;font-weight:700;
+}
+
+/* CONTENT */
+.content{padding:16px;max-width:1400px;margin:0 auto}
+.tab-view{display:none}.tab-view.active{display:block}
+
+/* SECTION CARD */
+.card{
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;
+}
+.card-head{
+  padding:12px 16px;background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.card-head h3{font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-body{padding:14px 16px}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead th{
+  padding:8px 10px;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:#fff;background:var(--mid);
+  text-align:left;white-space:nowrap;border:1px solid rgba(255,255,255,.1);
+}
+tbody tr:nth-child(even){background:#f8fafc}
+tbody tr:hover{background:#e3f2fd}
+tbody td{
+  padding:6px 8px;font-size:.8rem;border:1px solid var(--border);
+  vertical-align:top;
+}
+.td-edit{
+  width:100%;border:none;background:transparent;font-family:'IBM Plex Sans',sans-serif;
+  font-size:.8rem;color:var(--text);resize:none;min-height:28px;outline:none;
+  padding:0;
+}
+.td-edit:focus{background:#fffde7;border-radius:4px;padding:2px 4px;margin:-2px -4px;}
+select.td-edit{height:28px;cursor:pointer}
+
+/* STATUS BADGES */
+.st-badge{
+  display:inline-block;padding:2px 8px;border-radius:999px;
+  font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
+.st-existing{background:var(--okbg);color:var(--ok)}
+.st-strengthen{background:var(--warnbg);color:var(--warn)}
+.st-new{background:var(--newbg);color:var(--new)}
+.st-transversal{background:var(--transbg);color:var(--trans)}
+
+/* ADD ROW BTN */
+.add-row-btn{
+  margin-top:10px;display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:8px;border:1.5px dashed var(--border);
+  background:#fafcff;color:var(--muted);font-size:.75rem;font-weight:600;
+  cursor:pointer;font-family:'IBM Plex Sans',sans-serif;transition:.12s;
+}
+.add-row-btn:hover{background:var(--newbg);color:var(--new);border-color:var(--new)}
+
+/* DELETE BTN */
+.del-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:6px;border:none;background:transparent;
+  color:var(--muted);cursor:pointer;font-size:.9rem;flex-shrink:0;
+}
+.del-btn:hover{background:#ffebee;color:#c62828}
+
+/* PREVIEW */
+#previewBox{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  background:var(--navy);color:#b0bec5;border-radius:var(--radius);
+  padding:16px;white-space:pre-wrap;word-break:break-all;
+  max-height:500px;overflow-y:auto;line-height:1.6;
+}
+#previewBox .comment{color:#546e7a}
+#previewBox .section{color:var(--cyan);font-weight:bold}
+#previewBox .line{color:#e0e0e0}
+
+/* TXT PREVIEW highlight */
+.preview-highlight{
+  background:rgba(255,255,255,.06);border-radius:4px;
+  border-left:2px solid var(--cyan);padding-left:8px;
+}
+
+/* BADGE */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 9px;
+  border-radius:6px;background:#fff;border:1.5px solid var(--border);
+  font-size:.72rem;color:var(--muted);font-weight:600;
+}
+.badge.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+
+/* IMPORT AREA */
+.import-zone{
+  border:2px dashed var(--border);border-radius:var(--radius);
+  padding:20px;text-align:center;color:var(--muted);font-size:.82rem;
+  cursor:pointer;transition:.12s;background:#fafcff;
+}
+.import-zone:hover{border-color:var(--mid);background:var(--newbg);color:var(--mid)}
+.import-zone svg{width:32px;height:32px;fill:currentColor;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto}
+
+/* INSTRUCTIONS */
+.inst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.inst-card{
+  background:#fff;border:1.5px solid var(--border);border-radius:10px;
+  padding:14px 16px;
+}
+.inst-card h4{font-size:.78rem;font-weight:700;color:var(--mid);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.05em}
+.inst-card p{font-size:.78rem;color:var(--muted);line-height:1.5}
+.inst-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;background:var(--navy);
+  color:#fff;font-size:.68rem;font-weight:700;margin-right:6px;flex-shrink:0;
+}
+.step-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.step-row p{font-size:.8rem;color:var(--muted);line-height:1.4;padding-top:3px}
+
+/* COL WIDTHS hint */
+.col-id{width:140px;min-width:120px}
+.col-titulo{min-width:180px}
+.col-status{width:140px}
+.col-match{width:110px}
+.col-short{min-width:200px}
+.col-long{min-width:300px}
+.col-ordem{width:60px}
+.col-cat{min-width:200px}
+.col-action{min-width:350px}
+.col-resp{width:130px}
+.col-ref{width:100px}
+.col-del{width:32px}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:20px;right:20px;z-index:9999;
+  background:var(--ok);color:#fff;padding:12px 20px;border-radius:10px;
+  font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);
+  transform:translateY(80px);opacity:0;transition:.3s;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">Gerador TXT <span>Organograma RDC 665</span></div>
+  <div style="flex:1"></div>
+  <button class="btn warn" onclick="importTxt()">
+    <svg viewBox="0 0 20 20"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"/></svg>
+    Importar TXT existente
+  </button>
+  <input type="file" id="fileInput" accept=".txt" style="display:none" onchange="loadTxtFile(this)">
+  <button class="btn success" onclick="downloadTxt()">
+    <svg viewBox="0 0 20 20"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-9.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 7.293a1 1 0 01-1.414 0z"/></svg>
+    ▶ GERAR E BAIXAR TXT
+  </button>
+  <span class="badge ok" id="statusBadge">Pronto</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🗂 Gerador de Configuração — Organograma RDC 665</h1>
+  <p>Preencha as abas abaixo para configurar o organograma para a sua empresa. Clique em <strong>▶ GERAR E BAIXAR TXT</strong> para exportar o arquivo de configuração e importá-lo no Organograma.</p>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" data-tab="inst">Instruções</button>
+  <button class="tab" data-tab="areas">Áreas <span class="tab-count" id="cnt-areas">0</span></button>
+  <button class="tab" data-tab="actions">Ações <span class="tab-count" id="cnt-actions">0</span></button>
+  <button class="tab" data-tab="checklist">Checklist RH <span class="tab-count" id="cnt-checklist">0</span></button>
+  <button class="tab" data-tab="plan">Plano RH <span class="tab-count" id="cnt-plan">0</span></button>
+  <button class="tab" data-tab="preview">Prévia TXT</button>
+</div>
+
+<div class="content">
+
+<!-- INSTRUÇÕES -->
+<div id="view-inst" class="tab-view active">
+  <div class="card" style="margin-top:0">
+    <div class="card-head"><h3>📋 Como usar este gerador</h3></div>
+    <div class="card-body">
+      <div class="inst-grid" style="margin-bottom:20px">
+        <div class="inst-card">
+          <h4>📁 Abas deste editor</h4>
+          <p><strong>Áreas</strong> — Cadastre cada área do organograma com ID, título, status e textos.<br><br>
+          <strong>Ações</strong> — Adicione ações regulatórias para cada área.<br><br>
+          <strong>Checklist RH</strong> — Itens de conformidade de RH por categoria.<br><br>
+          <strong>Plano RH</strong> — 10 pilares de ação para RH.</p>
+        </div>
+        <div class="inst-card">
+          <h4>⚙️ Status válidos para áreas</h4>
+          <p>
+            <span class="st-badge st-existing">existing</span> — Área que já existe<br><br>
+            <span class="st-badge st-strengthen">strengthen</span> — Área a fortalecer<br><br>
+            <span class="st-badge st-new">new</span> — Área nova / a criar<br><br>
+            <span class="st-badge st-transversal">transversal</span> — Área transversal de suporte
+          </p>
+        </div>
+        <div class="inst-card">
+          <h4>💡 Campos da aba Áreas</h4>
+          <p><strong>ID</strong> — Único, sem espaços (use underline). Ex: <code>qa</code>, <code>rh_apoio</code><br><br>
+          <strong>areaMatch</strong> — Palavra-chave para vincular funcionários do Excel ao nó<br><br>
+          <strong>Hover</strong> — Texto curto para tooltip ao passar o mouse<br><br>
+          <strong>Detail</strong> — Texto longo para o painel lateral</p>
+        </div>
+        <div class="inst-card">
+          <h4>🔗 Vincular Ações às Áreas</h4>
+          <p>Na aba <strong>Ações</strong>, o campo <strong>ID da Área</strong> deve ser exatamente igual ao ID cadastrado na aba <strong>Áreas</strong>.<br><br>
+          Uma mesma área pode ter quantas ações quiser — basta adicionar várias linhas com o mesmo ID.</p>
+        </div>
+      </div>
+
+      <div class="card" style="border:none;box-shadow:none;background:var(--bg);padding:0">
+        <div style="padding:12px 0 8px">
+          <h4 style="font-size:.8rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">🚀 Passo a passo para gerar o TXT</h4>
+          <div class="step-row"><span class="inst-num">1</span><p>Preencha a aba <strong>Áreas</strong> com as áreas da sua empresa. Os dados de exemplo já estão preenchidos — adapte conforme necessário.</p></div>
+          <div class="step-row"><span class="inst-num">2</span><p>Adicione as ações regulatórias na aba <strong>Ações</strong>.</p></div>
+          <div class="step-row"><span class="inst-num">3</span><p>Revise os itens de <strong>Checklist RH</strong> e o <strong>Plano RH</strong>.</p></div>
+          <div class="step-row"><span class="inst-num">4</span><p>Clique em <strong>▶ GERAR E BAIXAR TXT</strong> no topo da página.</p></div>
+          <div class="step-row"><span class="inst-num">5</span><p>No Organograma, clique em <strong>Importar TXT</strong> e selecione o arquivo baixado.</p></div>
+          <div class="step-row"><span class="inst-num">💾</span><p>Você pode também <strong>Importar TXT existente</strong> para editar um arquivo já gerado.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ÁREAS -->
+<div id="view-areas" class="tab-view">
+  <div class="card">
+    <div class="card-head">
+      <h3>📌 Áreas do Organograma</h3>
+      <span style="font-size:.7rem;opacity:.7">id | titulo | status_importador | status_fabricante | areaMatch | hover | detail | ordem</span>
+    </div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table id="tbl-areas">
+          <thead>
+            <tr>
+              <th class="col-id">ID (único)</th>
+              <th class="col-titulo">Título</th>
+              <th class="col-status">Status Importador</th>
+              <th class="col-status">Status Fabricante</th>
+              <th class="col-match">areaMatch</th>
+              <th class="col-short">Hover (tooltip)</th>
+              <th class="col-long">Detail (painel completo)</th>
+              <th class="col-ordem">Ordem</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody-areas"></tbody>
+        </table>
+      </div>
+      <button class="add-row-btn" onclick="addArea()">+ Adicionar área</button>
+    </div>
+  </div>
+</div>
+
+<!-- AÇÕES -->
+<div id="view-actions" class="tab-view">
+  <div class="card">
+    <div class="card-head">
+      <h3>⚡ Ações Regulatórias por Área</h3>
+      <span style="font-size:.7rem;opacity:.7">areaId | item</span>
+    </div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table id="tbl-actions">
+          <thead>
+            <tr>
+              <th class="col-id">ID da Área</th>
+              <th class="col-action">Ação / Item regulatório</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody-actions"></tbody>
+        </table>
+      </div>
+      <button class="add-row-btn" onclick="addAction()">+ Adicionar ação</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST RH -->
+<div id="view-checklist" class="tab-view">
+  <div class="card">
+    <div class="card-head">
+      <h3>✅ Checklist Regulatório RH</h3>
+      <span style="font-size:.7rem;opacity:.7">categoria | item</span>
+    </div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table id="tbl-checklist">
+          <thead>
+            <tr>
+              <th class="col-cat">Categoria</th>
+              <th class="col-action">Item do Checklist</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody-checklist"></tbody>
+        </table>
+      </div>
+      <button class="add-row-btn" onclick="addChecklist()">+ Adicionar item</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLANO RH -->
+<div id="view-plan" class="tab-view">
+  <div class="card">
+    <div class="card-head">
+      <h3>📋 Plano de Ação RH — 10 Pilares</h3>
+      <span style="font-size:.7rem;opacity:.7">fase | acao | responsavel | ref</span>
+    </div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table id="tbl-plan">
+          <thead>
+            <tr>
+              <th class="col-cat">Fase / Pilar</th>
+              <th class="col-action">Ação</th>
+              <th class="col-resp">Responsável</th>
+              <th class="col-ref">Referência</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody-plan"></tbody>
+        </table>
+      </div>
+      <button class="add-row-btn" onclick="addPlan()">+ Adicionar pilar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRÉVIA -->
+<div id="view-preview" class="tab-view">
+  <div class="card">
+    <div class="card-head">
+      <h3>👁 Prévia do TXT gerado</h3>
+      <button class="btn primary" onclick="downloadTxt()">▶ Baixar TXT</button>
+    </div>
+    <div class="card-body">
+      <div id="previewBox"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DADOS INICIAIS
+// ═══════════════════════════════════════════════════
+const STATUS_OPTS = ["existing","strengthen","new","transversal"];
+
+const DEFAULT_AREAS = [
+  {id:"alta_adm",titulo:"Alta Administração",si:"existing",sf:"existing",match:"diretor",hover:"Patrocina recursos, política da qualidade e decisões estruturais do sistema.",detail:"A Alta Administração é o patrocinador máximo do SGQ conforme RDC 665/2022, Arts. 5º a 12. Responsabilidades: (1) Estabelecer a política da qualidade com objetivos mensuráveis; (2) Garantir recursos para QA, QC, Produção e RH; (3) Conduzir Revisão Gerencial anual; (4) Sustentar independência funcional da Qualidade.",ordem:1},
+  {id:"rd",titulo:"Representante da Direção (RD)",si:"existing",sf:"strengthen",match:"diretor",hover:"Figura formal que assegura a manutenção do sistema e reporta desempenho.",detail:"O RD é exigido formalmente pela RDC 665/2022, Arts. 8º e 9º. Responsável por: (1) Assegurar que o SGQ seja mantido; (2) Reportar desempenho à Alta Administração; (3) Ser elo oficial com a ANVISA; (4) Coordenar revisões gerenciais.",ordem:2},
+  {id:"qa",titulo:"Garantia da Qualidade (QA)",si:"strengthen",sf:"strengthen",match:"qualidade",hover:"QA deve ser independente, controlar documentos, auditorias, CAPA e mudanças.",detail:"QA é o núcleo regulatório do fabricante conforme RDC 665/2022, Arts. 13 a 55. Atribuições: (1) Controle de documentos; (2) Auditorias internas; (3) CAPA — Ações Corretivas e Preventivas; (4) Controle de mudanças; (5) Gerenciamento de risco ISO 14971.",ordem:3},
+  {id:"qc",titulo:"Controle de Qualidade / Laboratório (QC)",si:"new",sf:"new",match:"laborat",hover:"Estrutura para inspeção, testes, metrologia e liberação técnica.",detail:"QC é exigido pelos Arts. 56 a 70 da RDC 665/2022. Funções: (1) Inspeção de recebimento; (2) Testes de produto acabado; (3) Metrologia e calibração; (4) Liberação técnica de lote.",ordem:4},
+  {id:"reclamacoes",titulo:"Reclamações / Pós-mercado",si:"existing",sf:"strengthen",match:"reclama",hover:"Recebe, avalia e investiga reclamações e retroalimenta CAPA e qualidade.",detail:"Sistema obrigatório pelos Arts. 71 a 85. Abrange: (1) Registro de reclamações; (2) Avaliação de criticidade; (3) Investigação com causa raiz; (4) Notificação à ANVISA em até 72h.",ordem:5},
+  {id:"compras",titulo:"Compras / Fornecedores",si:"existing",sf:"strengthen",match:"compr",hover:"Controla compras, terceiros e fornecedores com critérios de qualidade.",detail:"Regulado pelos Arts. 33 a 42. Responsabilidades: (1) Qualificação de fornecedores; (2) Lista de aprovados; (3) Avaliação periódica anual; (4) Acordo de qualidade com terceirizados.",ordem:6},
+  {id:"producao",titulo:"Produção",si:"new",sf:"new",match:"produ",hover:"Área central da operação fabricante, com POPs, parâmetros e registros.",detail:"Maior salto estrutural na transição conforme Arts. 43 a 55. Exige: (1) POPs para etapas críticas; (2) Controle de parâmetros; (3) Validação de processos especiais; (4) Registro de Lote completo.",ordem:7},
+  {id:"logistica",titulo:"Logística / Armazenamento / Distribuição",si:"existing",sf:"strengthen",match:"logíst",hover:"Ganha peso com identificação, validade, segregação e rastreabilidade.",detail:"Integra o SGQ conforme Arts. 56 a 62. Abrange: (1) Armazenamento controlado; (2) Rastreabilidade de lote; (3) FEFO; (4) Registros de distribuição por 2 anos.",ordem:8},
+  {id:"assistencia",titulo:"Assistência Técnica",si:"existing",sf:"strengthen",match:"assist",hover:"Mantém instalação, manutenção, reparo e histórico técnico do produto.",detail:"Regulada pelos Arts. 63 a 70. Responsabilidades: (1) POPs de instalação e reparo; (2) Registros de serviço; (3) Testes pós-serviço; (4) Qualificação de técnicos.",ordem:9},
+  {id:"rh",titulo:"Recursos Humanos",si:"transversal",sf:"transversal",match:"rh",hover:"RH sustenta estrutura, cargos, competência, treinamento e evidência.",detail:"RH é eixo transversal pela RDC 665/2022, Arts. 13 a 15, 34, 70, 71 e 77. Co-responsável pelo SGQ: (1) Organograma regulatório; (2) Descrições de cargo; (3) Matriz de competência; (4) Trilha de treinamento.",ordem:10},
+  {id:"sst",titulo:"SST / Medicina Ocupacional / EHS",si:"strengthen",sf:"strengthen",match:"segurança",hover:"Suporte à saúde, higiene, vestimenta, EPI e restrição de acesso.",detail:"Integrada ao SGQ pelos Arts. 70, 71 e 77. Funções: (1) PCMSO com ASO válido; (2) PGR com EPIs compatíveis; (3) Higiene e vestimenta; (4) Auto-reporte de saúde.",ordem:11},
+];
+
+const DEFAULT_ACTIONS = [
+  {id:"alta_adm",item:"Formalizar a política da qualidade e os objetivos mensuráveis para o ambiente fabricante."},
+  {id:"alta_adm",item:"Aprovar a estrutura organizacional compatível com a operação fabricante, garantindo independência de QA."},
+  {id:"alta_adm",item:"Garantir recursos humanos, financeiros e de infraestrutura para QA, QC, Produção e RH regulatório."},
+  {id:"alta_adm",item:"Instituir rotina formal de revisão gerencial semestral ou anual com pauta, evidências e ata."},
+  {id:"rd",item:"Emitir designação formal e documentada do RD com escopo de atuação e autoridade definidos."},
+  {id:"rd",item:"Definir rotina mensal de reporte do desempenho do SGQ para a Alta Administração."},
+  {id:"rd",item:"Consolidar indicadores de sistema: CAPA aberta, auditorias, reclamações, treinamentos vencidos."},
+  {id:"qa",item:"Formalizar e documentar a independência funcional de QA em relação à Produção e Vendas."},
+  {id:"qa",item:"Implantar controle de documentos: numeração, revisão, aprovação, distribuição e descarte controlado."},
+  {id:"qa",item:"Estruturar programa anual de auditorias internas com auditores independentes por área auditada."},
+  {id:"qa",item:"Implantar sistema de CAPA com abertura, investigação de causa raiz, ação e verificação de eficácia."},
+  {id:"qa",item:"Implementar controle de mudanças formal antes de qualquer mudança em produto, processo ou fornecedor."},
+  {id:"qc",item:"Definir e documentar critérios de aceitação para matérias-primas, produto em processo e produto acabado."},
+  {id:"qc",item:"Estruturar inspeção de recebimento com plano de amostragem, métodos e registros formais."},
+  {id:"qc",item:"Implantar gestão de equipamentos de medição: lista mestra, calibração periódica e verificação."},
+  {id:"qc",item:"Criar e manter registros de liberação técnica de lote, com assinatura de responsável técnico."},
+  {id:"reclamacoes",item:"Formalizar unidade responsável por receber, registrar e priorizar todas as reclamações de campo."},
+  {id:"reclamacoes",item:"Definir e treinar fluxo de notificação à ANVISA (Tecnovigilância) em até 72h para eventos graves."},
+  {id:"compras",item:"Estabelecer critérios formais e documentados para qualificação e aprovação de fornecedores críticos."},
+  {id:"compras",item:"Controlar terceirizados com acordo de qualidade para fabricação, embalagem e armazenamento."},
+  {id:"producao",item:"Criar e aprovar POPs para todas as etapas críticas de fabricação, disponíveis no ponto de uso."},
+  {id:"producao",item:"Definir, monitorar e registrar parâmetros críticos de processo com limites de alerta e ação."},
+  {id:"producao",item:"Validar processos especiais cujo resultado não pode ser verificado no produto final."},
+  {id:"logistica",item:"Controlar armazenamento com temperatura, umidade e segregação documentadas."},
+  {id:"logistica",item:"Implementar FEFO garantindo que produtos com validade mais próxima saiam primeiro."},
+  {id:"assistencia",item:"Criar POPs para instalação, manutenção preventiva, corretiva e reparo de cada produto."},
+  {id:"assistencia",item:"Realizar e registrar teste funcional pós-serviço antes de devolver produto ao cliente."},
+  {id:"rh",item:"Revisar e aprovar organograma demonstrando suficiência de pessoal e independência de QA."},
+  {id:"rh",item:"Implantar matriz de competência por função crítica e plano de fechamento de lacunas."},
+  {id:"rh",item:"Estruturar trilha de treinamento inicial, periódico e pós-mudança com verificação de eficácia."},
+  {id:"sst",item:"Garantir ASO válido e aptidão confirmada para todos os colaboradores em contato com produto."},
+  {id:"sst",item:"Implantar mecanismo de auto-reporte de doenças e afastamento preventivo quando houver risco."},
+];
+
+const DEFAULT_CHECKLIST = [
+  {cat:"1. Estrutura e Organização",item:"Possui organograma atualizado que demonstre a estrutura e a inter-relação do pessoal."},
+  {cat:"1. Estrutura e Organização",item:"O pessoal da Qualidade possui a independência necessária para executar suas funções sem pressão produtiva."},
+  {cat:"1. Estrutura e Organização",item:"Há um Representante da Gerência (RD) formalmente designado e documentado."},
+  {cat:"1. Estrutura e Organização",item:"O número de colaboradores é comprovadamente suficiente para todas as operações reguladas."},
+  {cat:"2. Gestão de Cargos e Competências",item:"Existem descrições de cargo documentadas para todas as funções que influenciam a qualidade."},
+  {cat:"2. Gestão de Cargos e Competências",item:"As descrições detalham autoridade, responsabilidade e requisitos de instrução e experiência."},
+  {cat:"2. Gestão de Cargos e Competências",item:"Há definição de substitutos e back-up para funções regulatórias críticas."},
+  {cat:"3. Treinamento e Conscientização",item:"Existe procedimento estabelecido para treinamento contínuo conduzido por pessoas qualificadas."},
+  {cat:"3. Treinamento e Conscientização",item:"Todos os colaboradores foram treinados nos requisitos da RDC 665/2022 aplicáveis às suas funções."},
+  {cat:"3. Treinamento e Conscientização",item:"Há registro formal de que os funcionários foram advertidos sobre defeitos nos produtos."},
+  {cat:"3. Treinamento e Conscientização",item:"Existe trilha de treinamento inicial, periódico e pós-mudança documental."},
+  {cat:"4. Saúde, Higiene e Segurança (PCMSO/PGR)",item:"O PCMSO garante que o pessoal em contato com o produto esteja saudável e apto."},
+  {cat:"4. Saúde, Higiene e Segurança (PCMSO/PGR)",item:"O PGR prevê o uso de EPIs compatíveis com os processos de trabalho e a proteção do produto."},
+  {cat:"4. Saúde, Higiene e Segurança (PCMSO/PGR)",item:"Há regras claras de higiene e vestimenta para cada área produtiva ou controlada."},
+  {cat:"5. Arquivo e Retenção",item:"Todos os registros de RH, treinamentos e ASOs são mantidos por no mínimo 2 anos após a distribuição."},
+  {cat:"5. Arquivo e Retenção",item:"Os registros de RH são legíveis, rastreáveis e de rápida recuperação para inspeções da ANVISA."},
+  {cat:"6. Itens adicionais para fabricante",item:"Existe matriz de competência por função crítica com gaps identificados e plano de fechamento."},
+  {cat:"6. Itens adicionais para fabricante",item:"RH participa de auditorias, CAPA e revisão gerencial quando houver causa ligada a pessoas."},
+  {cat:"6. Itens adicionais para fabricante",item:"Indicadores de treinamento vencido, lacuna de competência e turnover são reportados na revisão gerencial."},
+];
+
+const DEFAULT_PLAN = [
+  {fase:"Pilar 1: Estrutura",acao:"Revisar o Organograma garantindo a independência da área de Garantia da Qualidade (QA) com reporte direto à Alta Administração.",resp:"RH / Diretoria",ref:"Art. 8º"},
+  {fase:"Pilar 2: Cargos",acao:"Atualizar descrições de cargo incluindo a autoridade explícita para interromper processos em caso de risco à qualidade.",resp:"RH",ref:"Art. 14"},
+  {fase:"Pilar 3: Saúde",acao:"Integrar o PCMSO ao Sistema da Qualidade criando formulário de auto-reporte de saúde para colaboradores em áreas produtivas.",resp:"RH / SESMT",ref:"Art. 71"},
+  {fase:"Pilar 4: Segurança",acao:"Alinhar o PGR com a Produção para garantir que EPIs não contaminem nem danifiquem os produtos médicos.",resp:"SESMT / RH",ref:"Art. 77"},
+  {fase:"Pilar 5: Treino",acao:"Executar workshop de conscientização de defeitos mostrando o impacto real de um erro humano no paciente.",resp:"Qualidade / RH",ref:"Art. 15"},
+  {fase:"Pilar 6: Documental",acao:"Digitalizar e indexar todos os registros de treinamento para garantir rápida recuperação em inspeções da ANVISA.",resp:"RH / TI",ref:"Art. 34"},
+  {fase:"Pilar 7: Competência",acao:"Implantar matriz de competência e critérios de liberação para função crítica, com plano de fechamento de lacunas.",resp:"RH / Qualidade",ref:"Arts. 13 a 15"},
+  {fase:"Pilar 8: Governança",acao:"Inserir indicadores de treinamento, funções críticas, saúde ocupacional e turnover regulatório na pauta da revisão gerencial.",resp:"RH / RD / Diretoria",ref:"Arts. 10 a 12"},
+  {fase:"Pilar 9: Integração",acao:"Criar rotina formal mensal entre RH, QA, Produção e SST para tratar desvio comportamental e aptidão para funções críticas.",resp:"RH / QA / SST",ref:"Arts. 70, 71 e 77"},
+  {fase:"Pilar 10: Back-up",acao:"Definir e documentar substitutos formais para funções regulatórias críticas com competência equivalente.",resp:"RH / Diretoria",ref:"Art. 13"},
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let state = {
+  areas: JSON.parse(JSON.stringify(DEFAULT_AREAS)),
+  actions: JSON.parse(JSON.stringify(DEFAULT_ACTIONS)),
+  checklist: JSON.parse(JSON.stringify(DEFAULT_CHECKLIST)),
+  plan: JSON.parse(JSON.stringify(DEFAULT_PLAN)),
+};
+
+// ═══════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════
+function statusSelect(val, onChange) {
+  const sel = document.createElement('select');
+  sel.className = 'td-edit';
+  STATUS_OPTS.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt; o.text = opt;
+    if (opt === val) o.selected = true;
+    sel.appendChild(o);
+  });
+  sel.onchange = onChange;
+  return sel;
+}
+
+function textarea(val, onChange, rows=2) {
+  const ta = document.createElement('textarea');
+  ta.className = 'td-edit';
+  ta.value = val;
+  ta.rows = rows;
+  ta.oninput = onChange;
+  // auto-resize
+  ta.addEventListener('input', () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; });
+  return ta;
+}
+
+function input(val, onChange) {
+  const inp = document.createElement('input');
+  inp.className = 'td-edit';
+  inp.type = 'text';
+  inp.value = val;
+  inp.oninput = onChange;
+  return inp;
+}
+
+function delBtn(onClick) {
+  const btn = document.createElement('button');
+  btn.className = 'del-btn';
+  btn.title = 'Remover linha';
+  btn.textContent = '×';
+  btn.onclick = onClick;
+  return btn;
+}
+
+function renderAreas() {
+  const tbody = document.getElementById('tbody-areas');
+  tbody.innerHTML = '';
+  state.areas.forEach((a, i) => {
+    const tr = document.createElement('tr');
+    const cells = [
+      () => input(a.id, e => { state.areas[i].id = e.target.value; updateCounts(); }),
+      () => input(a.titulo, e => state.areas[i].titulo = e.target.value),
+      () => statusSelect(a.si, e => state.areas[i].si = e.target.value),
+      () => statusSelect(a.sf, e => state.areas[i].sf = e.target.value),
+      () => input(a.match, e => state.areas[i].match = e.target.value),
+      () => textarea(a.hover, e => state.areas[i].hover = e.target.value, 2),
+      () => textarea(a.detail, e => state.areas[i].detail = e.target.value, 3),
+      () => input(a.ordem, e => state.areas[i].ordem = e.target.value),
+    ];
+    cells.forEach(fn => { const td = document.createElement('td'); td.appendChild(fn()); tr.appendChild(td); });
+    const tdDel = document.createElement('td');
+    tdDel.appendChild(delBtn(() => { state.areas.splice(i, 1); renderAreas(); updateCounts(); }));
+    tr.appendChild(tdDel);
+    tbody.appendChild(tr);
+  });
+  updateCounts();
+}
+
+function renderActions() {
+  const tbody = document.getElementById('tbody-actions');
+  tbody.innerHTML = '';
+  state.actions.forEach((a, i) => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.appendChild(input(a.id, e => state.actions[i].id = e.target.value));
+    const td2 = document.createElement('td');
+    td2.appendChild(textarea(a.item, e => state.actions[i].item = e.target.value, 2));
+    const tdDel = document.createElement('td');
+    tdDel.appendChild(delBtn(() => { state.actions.splice(i, 1); renderActions(); updateCounts(); }));
+    tr.append(td1, td2, tdDel);
+    tbody.appendChild(tr);
+  });
+  updateCounts();
+}
+
+function renderChecklist() {
+  const tbody = document.getElementById('tbody-checklist');
+  tbody.innerHTML = '';
+  state.checklist.forEach((c, i) => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.appendChild(input(c.cat, e => state.checklist[i].cat = e.target.value));
+    const td2 = document.createElement('td');
+    td2.appendChild(textarea(c.item, e => state.checklist[i].item = e.target.value, 2));
+    const tdDel = document.createElement('td');
+    tdDel.appendChild(delBtn(() => { state.checklist.splice(i, 1); renderChecklist(); updateCounts(); }));
+    tr.append(td1, td2, tdDel);
+    tbody.appendChild(tr);
+  });
+  updateCounts();
+}
+
+function renderPlan() {
+  const tbody = document.getElementById('tbody-plan');
+  tbody.innerHTML = '';
+  state.plan.forEach((p, i) => {
+    const tr = document.createElement('tr');
+    const cells = [
+      () => input(p.fase, e => state.plan[i].fase = e.target.value),
+      () => textarea(p.acao, e => state.plan[i].acao = e.target.value, 2),
+      () => input(p.resp, e => state.plan[i].resp = e.target.value),
+      () => input(p.ref, e => state.plan[i].ref = e.target.value),
+    ];
+    cells.forEach(fn => { const td = document.createElement('td'); td.appendChild(fn()); tr.appendChild(td); });
+    const tdDel = document.createElement('td');
+    tdDel.appendChild(delBtn(() => { state.plan.splice(i, 1); renderPlan(); updateCounts(); }));
+    tr.appendChild(tdDel);
+    tbody.appendChild(tr);
+  });
+  updateCounts();
+}
+
+function updateCounts() {
+  document.getElementById('cnt-areas').textContent = state.areas.length;
+  document.getElementById('cnt-actions').textContent = state.actions.length;
+  document.getElementById('cnt-checklist').textContent = state.checklist.length;
+  document.getElementById('cnt-plan').textContent = state.plan.length;
+}
+
+// ═══════════════════════════════════════════════════
+//  ADD ROWS
+// ═══════════════════════════════════════════════════
+function addArea() {
+  state.areas.push({id:'',titulo:'',si:'existing',sf:'existing',match:'',hover:'',detail:'',ordem:state.areas.length+1});
+  renderAreas();
+  document.querySelector('#tbody-areas tr:last-child input').focus();
+}
+function addAction() {
+  state.actions.push({id:'',item:''});
+  renderActions();
+  document.querySelector('#tbody-actions tr:last-child input').focus();
+}
+function addChecklist() {
+  state.checklist.push({cat:'',item:''});
+  renderChecklist();
+  document.querySelector('#tbody-checklist tr:last-child input').focus();
+}
+function addPlan() {
+  state.plan.push({fase:'',acao:'',resp:'',ref:''});
+  renderPlan();
+  document.querySelector('#tbody-plan tr:last-child input').focus();
+}
+
+// ═══════════════════════════════════════════════════
+//  GERAR TXT
+// ═══════════════════════════════════════════════════
+function buildTxt() {
+  let txt = '# Formato:\n';
+  txt += '# [AREAS] id|titulo|status_importador|status_fabricante|areaMatch|hover|detail|ordem\n';
+  txt += '# [AREA_ACTIONS] areaId|item\n';
+  txt += '# [RH_CHECKLIST] categoria|item\n';
+  txt += '# [RH_ACTION_PLAN] fase|acao|responsavel|ref\n\n';
+
+  txt += '[AREAS]\n';
+  state.areas.forEach(a => {
+    if (!a.id || !a.titulo) return;
+    const d = (a.detail||'').replace(/\n/g,' ').replace(/\r/g,' ');
+    const h = (a.hover||'').replace(/\n/g,' ').replace(/\r/g,' ');
+    txt += `${a.id}|${a.titulo}|${a.si}|${a.sf}|${a.match||''}|${h}|${d}|${a.ordem||''}\n`;
+  });
+
+  txt += '[AREA_ACTIONS]\n';
+  state.actions.forEach(a => {
+    if (!a.id || !a.item) return;
+    const item = (a.item||'').replace(/\n/g,' ').replace(/\r/g,' ');
+    txt += `${a.id}|${item}\n`;
+  });
+
+  txt += '[RH_CHECKLIST]\n';
+  state.checklist.forEach(c => {
+    if (!c.cat || !c.item) return;
+    const item = (c.item||'').replace(/\n/g,' ').replace(/\r/g,' ');
+    txt += `${c.cat}|${item}\n`;
+  });
+
+  txt += '[RH_ACTION_PLAN]\n';
+  state.plan.forEach(p => {
+    if (!p.fase || !p.acao) return;
+    const acao = (p.acao||'').replace(/\n/g,' ').replace(/\r/g,' ');
+    txt += `${p.fase}|${acao}|${p.resp||''}|${p.ref||''}\n`;
+  });
+
+  return txt;
+}
+
+function downloadTxt() {
+  const txt = buildTxt();
+  const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'organograma_config.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('✅ TXT gerado e baixado com sucesso!');
+  document.getElementById('statusBadge').textContent = 'TXT gerado!';
+}
+
+// ═══════════════════════════════════════════════════
+//  PRÉVIA
+// ═══════════════════════════════════════════════════
+function renderPreview() {
+  const txt = buildTxt();
+  const box = document.getElementById('previewBox');
+  box.innerHTML = '';
+  txt.split('\n').forEach(line => {
+    const div = document.createElement('div');
+    if (line.startsWith('#')) {
+      div.style.color = '#546e7a';
+    } else if (line.startsWith('[')) {
+      div.style.color = '#29b6f6';
+      div.style.fontWeight = 'bold';
+      div.style.marginTop = '8px';
+    } else if (line.trim()) {
+      div.style.color = '#e0e0e0';
+    }
+    div.textContent = line || '\u00A0';
+    box.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  IMPORTAR TXT EXISTENTE
+// ═══════════════════════════════════════════════════
+function importTxt() {
+  document.getElementById('fileInput').click();
+}
+
+function loadTxtFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => parseTxtIntoState(e.target.result || '');
+  reader.readAsText(file, 'utf-8');
+  input.value = '';
+}
+
+function parseTxtIntoState(txt) {
+  const lines = txt.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+  let section = '';
+  const newAreas = [], newActions = [], newCk = [], newPlan = [];
+
+  lines.forEach(line => {
+    if (line.startsWith('[') && line.endsWith(']')) { section = line.slice(1,-1); return; }
+    const parts = line.split('|');
+
+    if (section === 'AREAS' && parts.length >= 8) {
+      newAreas.push({id:parts[0],titulo:parts[1],si:parts[2],sf:parts[3],match:parts[4],hover:parts[5],detail:parts[6],ordem:parts[7]});
+    } else if (section === 'AREA_ACTIONS' && parts.length >= 2) {
+      newActions.push({id:parts[0],item:parts.slice(1).join('|')});
+    } else if (section === 'RH_CHECKLIST' && parts.length >= 2) {
+      newCk.push({cat:parts[0],item:parts.slice(1).join('|')});
+    } else if (section === 'RH_ACTION_PLAN' && parts.length >= 2) {
+      newPlan.push({fase:parts[0],acao:parts[1]||'',resp:parts[2]||'',ref:parts[3]||''});
+    }
+  });
+
+  if (newAreas.length) state.areas = newAreas;
+  if (newActions.length) state.actions = newActions;
+  if (newCk.length) state.checklist = newCk;
+  if (newPlan.length) state.plan = newPlan;
+
+  renderAll();
+  showToast(`✅ TXT importado: ${newAreas.length} áreas, ${newActions.length} ações`);
+}
+
+function renderAll() {
+  renderAreas(); renderActions(); renderChecklist(); renderPlan();
+}
+
+// ═══════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('view-'+tab).classList.add('active');
+    if (tab === 'preview') renderPreview();
+  });
+});
+
+// ═══════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+renderAll();
+</script>
+</body>
+</html>
